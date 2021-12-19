@@ -1,0 +1,63 @@
+Package: sigrap
+Title: Wrappers for somatic mutation signature analysis tools
+Version: 0.0.0.9000
+Description: Wraps functionality from somatic signature analysis tools.
+Authors@R: 
+    person(given = "Peter",
+           family = "Diakumis",
+           role = c("aut", "cre"),
+           email = "peterdiakumis@gmail.com",
+           comment = c(ORCID = "0000-0002-7502-7545"))
+URL: https://umccr.github.io/sigrap/, https://github.com/umccr/sigrap
+BugReports: https://github.com/umccr/sigrap/issues
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+ByteCompile: true
+Depends:
+    R (>= 4.1)
+biocViews:
+Remotes:
+    umccr/signature.tools.lib,
+    UMCUGenetics/mutSigExtractor,
+    UMCUGenetics/CHORD
+Imports: 
+    assertthat,
+    bedr,
+    cli,
+    CHORD,
+    dplyr,
+    ggplot2,
+    gt,
+    gtools,
+    jsonlite,
+    MutationalPatterns,
+    mutSigExtractor,
+    readr,
+    rlang,
+    signature.tools.lib,
+    StructuralVariantAnnotation,
+    stringr,
+    tidyr,
+    VariantAnnotation
+Suggests:
+    BSgenome.Hsapiens.UCSC.hg19,
+    BSgenome.Hsapiens.UCSC.hg38,
+    BSgenome.Hsapiens.1000genomes.hs37d5,
+    devtools,
+    DT,
+    glue,
+    kableExtra,
+    knitr,
+    patchwork,
+    purrr,
+    rmarkdown,
+    scales,
+    testthat (>= 3.0.0),
+    tibble,
+    tidyselect
+Roxygen: list(markdown = TRUE,
+              roclets = c("namespace", "rd", "roxytest::testthat_roclet"))
+RoxygenNote: 7.1.2
+Config/testthat/edition: 3
+VignetteBuilder: knitr
