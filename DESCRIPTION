@@ -29,7 +29,7 @@ Imports:
     CHORD,
     dplyr,
     ggplot2,
-    gpgr,
+    gpgr (>=1.0.0),
     gt,
     gtools,
     jsonlite,

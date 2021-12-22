@@ -26,5 +26,9 @@ reference:
   - cosmic_signatures_2015
   - starts_with("sig")
 
+- title: "Others"
+- contents:
+  - get_genome_obj
+
 news:
   one_page: true
