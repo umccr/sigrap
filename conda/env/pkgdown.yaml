@@ -2,6 +2,7 @@ channels:
   - local
 dependencies:
   - r-sigrap
+  - bioconductor-bsgenome.hsapiens.ucsc.hg38
   - r-devtools
   - r-kableextra
   - r-patchwork
