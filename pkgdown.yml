@@ -1,0 +1,12 @@
+pandoc: 2.16.2
+pkgdown: 2.0.1
+pkgdown_sha: ~
+articles:
+  chord: chord.html
+  hrdetect: hrdetect.html
+  mutationalpatterns: mutationalpatterns.html
+last_built: 2021-12-22T22:28Z
+urls:
+  reference: https://umccr.github.io/sigrap/reference
+  article: https://umccr.github.io/sigrap/articles
+
