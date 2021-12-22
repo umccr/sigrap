@@ -11,12 +11,8 @@ Authors@R:
 URL: https://umccr.github.io/sigrap/, https://github.com/umccr/sigrap
 BugReports: https://github.com/umccr/sigrap/issues
 License: MIT + file LICENSE
-Encoding: UTF-8
-LazyData: true
-ByteCompile: true
 Depends:
     R (>= 4.1)
-biocViews:
 Remotes:
     umccr/gpgr,
     umccr/signature.tools.lib,
@@ -29,7 +25,7 @@ Imports:
     CHORD,
     dplyr,
     ggplot2,
-    gpgr (>=1.0.0),
+    gpgr (>= 1.0.0),
     gt,
     gtools,
     jsonlite,
@@ -60,6 +56,10 @@ Suggests:
     tidyselect
 Roxygen: list(markdown = TRUE,
               roclets = c("namespace", "rd", "roxytest::testthat_roclet"))
-RoxygenNote: 7.1.2
+biocViews:
+ByteCompile: true
 Config/testthat/edition: 3
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.1.2
 VignetteBuilder: knitr

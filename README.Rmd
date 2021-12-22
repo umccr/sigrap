@@ -18,16 +18,80 @@ knitr::opts_chunk$set(
 
 Wrappers for somatic mutation signature analysis tools.
 
+- See <https://umccr.github.io/sigrap/>
+
 ## Installation
 
 ```r
 remotes::install_github("umccr/sigrap")
 ```
 
-## Example
+- Or if used inside a conda environment:
 
-This is a basic example which shows you how to solve a common problem:
+```bash
+conda install r-sigrap -c umccr -c conda-forge -c bioconda
+```
 
-```{r example}
-library(sigrap)
+## Main Modules
+
+### HRDetect
+
+Wraps functionality from the [HRDetect](https://github.com/Nik-Zainal-Group/signature.tools.lib)
+framework - see
+vignette at <https://umccr.github.io/sigrap/articles/hrdetect.html>.
+
+### CHORD
+
+Wraps functionality from [CHORD](https://github.com/UMCUGenetics/CHORD) - see
+vignette at <https://umccr.github.io/sigrap/articles/chord.html>.
+
+### MutationalPatterns
+
+Wraps functionality from [MutationalPatterns](https://github.com/UMCUGenetics/MutationalPatterns) - see
+vignette at <https://umccr.github.io/sigrap/articles/mutationalpatterns.html>.
+
+## CLI (v0.0.1)
+
+```text
+#------- sigrap -------#
+$ inst/src/sigrap.R --help
+usage: sigrap [-h] {hrdetect,chord,mutpat} ...
+
+positional arguments:
+  {hrdetect,chord,mutpat}
+                        sub-command help
+    hrdetect            hrdetect help
+    chord               chord help
+    mutpat              mutationalpatterns help
+
+#------- hrdetect -------#
+$ inst/src/sigrap.R hrdetect --help
+usage: sigrap hrdetect [-h] --sample SAMPLE --snv SNV --sv SV --cnv CNV
+                     [--out OUT]
+
+optional arguments:
+  --sample SAMPLE  Sample name.
+  --snv SNV        Input SNV (VCF format).
+  --sv SV          Input SV (VCF format).
+  --cnv CNV        Input CNV (TSV format).
+  --out OUT        Output file ['hrdetect.json.gz'].
+
+#------- chord -------#
+$ inst/src/sigrap.R chord --help
+usage: sigrap chord [-h] --sample SAMPLE --snv SNV --sv SV [--out OUT]
+
+optional arguments:
+  --sample SAMPLE  Sample name.
+  --snv SNV        Input SNV (VCF format).
+  --sv SV          Input SV (VCF format).
+  --out OUT        Output file ['chord.json.gz']
+
+#------- mutpat -------#
+$ inst/src/sigrap.R mutpat --help
+usage: sigrap mutpat [-h] --sample SAMPLE --snv SNV --outdir OUTDIR
+
+optional arguments:
+  --sample SAMPLE  Sample name.
+  --snv SNV        Input SNV file (VCF format).
+  --outdir OUTDIR  Output directory to write results to
 ```

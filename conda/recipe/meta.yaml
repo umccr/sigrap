@@ -1,0 +1,67 @@
+package:
+  name: r-sigrap
+  version: 0.0.0.9000 # bump2version
+
+source:
+  path: ../..
+
+build:
+  number: 0
+  noarch: generic
+  rpaths:
+    - lib/R/lib/
+    - lib/
+
+requirements:
+  build:
+    - git
+  host:
+    - r-base
+    - r-assertthat
+    - r-bedr
+    - r-chord
+    - r-cli
+    - r-dplyr
+    - r-dt
+    - r-ggplot2
+    - r-gpgr
+    - r-gt
+    - r-gtools
+    - r-jsonlite
+    - bioconductor-mutationalpatterns
+    - r-readr
+    - r-signature.tools.lib
+    - r-stringr
+    - bioconductor-structuralvariantannotation
+    - r-tidyr
+    - bioconductor-variantannotation
+  run:
+    - r-base
+    - r-assertthat
+    - r-bedr
+    - r-chord
+    - r-cli
+    - r-dplyr
+    - r-dt
+    - r-ggplot2
+    - r-gpgr
+    - r-gt
+    - r-gtools
+    - r-jsonlite
+    - bioconductor-mutationalpatterns
+    - r-readr
+    - r-signature.tools.lib
+    - r-stringr
+    - bioconductor-structuralvariantannotation
+    - r-tidyr
+    - bioconductor-variantannotation
+
+test:
+  commands:
+    - $R -e "library('sigrap')"
+
+about:
+  home: https://github.com/umccr/sigrap
+  license: MIT + file LICENSE
+  summary: Wrappers for somatic mutation signature analysis tools
+  license_family: MIT

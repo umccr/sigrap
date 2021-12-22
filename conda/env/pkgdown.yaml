@@ -1,0 +1,9 @@
+channels:
+  - local
+dependencies:
+  - r-sigrap
+  - r-devtools
+  - r-kableextra
+  - r-patchwork
+  - r-pkgdown
+  - pandoc
