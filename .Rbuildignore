@@ -1,4 +1,11 @@
-^sigrap\.Rproj$
-^\.Rproj\.user$
+^\.bumpversion\.cfg$
+^data-raw$
+^docs$
 ^LICENSE\.md$
+^nogit$
+^outputs$
+^pkgdown$
+^\.pre-commit-config\.yaml$
 ^README\.Rmd$
+^\.Rproj\.user$
+^sigrap\.Rproj$

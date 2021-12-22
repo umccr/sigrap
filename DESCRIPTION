@@ -2,7 +2,7 @@ Package: sigrap
 Title: Wrappers for somatic mutation signature analysis tools
 Version: 0.0.0.9000
 Description: Wraps functionality from somatic signature analysis tools.
-Authors@R: 
+Authors@R:
     person(given = "Peter",
            family = "Diakumis",
            role = c("aut", "cre"),
@@ -18,16 +18,18 @@ Depends:
     R (>= 4.1)
 biocViews:
 Remotes:
+    umccr/gpgr,
     umccr/signature.tools.lib,
     UMCUGenetics/mutSigExtractor,
     UMCUGenetics/CHORD
-Imports: 
+Imports:
     assertthat,
     bedr,
     cli,
     CHORD,
     dplyr,
     ggplot2,
+    gpgr,
     gt,
     gtools,
     jsonlite,

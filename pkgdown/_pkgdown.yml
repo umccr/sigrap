@@ -1,0 +1,30 @@
+template:
+  bootstrap: 5
+  #bootswatch: sketchy
+url: https://umccr.github.io/sigrap/
+authors:
+  Peter Diakumis:
+    href: https://github.com/pdiakumis
+
+reference:
+- title: "CHORD"
+  desc: >
+    Functions related to CHORD (https://github.com/UMCUGenetics/CHORD)
+- contents:
+  - starts_with("chord")
+
+- title: "HRDetect"
+  desc: >
+    Functions related to HRDetect (https://github.com/Nik-Zainal-Group/signature.tools.lib)
+- contents:
+  - starts_with("hrdetect")
+
+- title: "MutationalPatterns"
+  desc: >
+    Functions related to MutationalPatterns (https://github.com/UMCUGenetics/MutationalPatterns)
+- contents:
+  - cosmic_signatures_2015
+  - starts_with("sig")
+
+news:
+  one_page: true
