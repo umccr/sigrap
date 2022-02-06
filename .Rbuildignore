@@ -9,3 +9,6 @@
 ^README\.Rmd$
 ^\.Rproj\.user$
 ^sigrap\.Rproj$
+^conda$
+^\.github$
+^vignettes$

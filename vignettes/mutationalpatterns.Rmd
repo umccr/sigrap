@@ -1,18 +1,12 @@
 ---
 title: "MutationalPatterns"
-author: "Peter Diakumis"
 date: "`r Sys.time()`"
-output: rmarkdown::html_vignette
+output: rmarkdown::html_document
 resource_files:
   - outputs/sig_plots/Sig
   - outputs/sig_plots/SBS
   - outputs/sig_plots/DBS
   - outputs/sig_plots/ID
-
-vignette: >
-  %\VignetteIndexEntry{MutationalPatterns}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
 ---
 
 ```{r knitr_opts, include = FALSE}
