@@ -314,7 +314,6 @@ hrdetect_run <- function(nm, snvindel_vcf, sv_vcf, cnv_tsv, genome = "hg38", snv
   snv <- snvindel$snv_results |>
     dplyr::filter(.data$sig %in% c("Signature.3", "Signature.8")) |>
     tidyr::pivot_wider(
-      id_cols = c("sig", "exposure"),
       names_from = "sig", values_from = "exposure"
     )
 
