@@ -26,14 +26,14 @@
     
     <a class="navbar-brand me-2" href="../index.html">sigrap</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
-    <div id="navbar" class="collapse navbar-collapse ms-2">
+    <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
 <li class="nav-item">
   <a class="nav-link" href="../reference/index.html">Reference</a>
@@ -67,13 +67,15 @@
     
   </div>
 </nav><div class="container template-article">
+
+
+
 <script src="mutationalpatterns_files/kePrint-0.0.1/kePrint.js"></script><link href="mutationalpatterns_files/lightable-0.0.1/lightable.css" rel="stylesheet">
 <div class="row">
   <main id="main"><div class="page-header">
       <img src="" class="logo" alt=""><h1>MutationalPatterns</h1>
-                        <h4 data-toc-skip class="author">Peter Diakumis</h4>
             
-            <h4 data-toc-skip class="date">2021-12-22 22:29:40</h4>
+            <h4 data-toc-skip class="date">2022-03-17 07:31:14</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/umccr/sigrap/blob/HEAD/vignettes/mutationalpatterns.Rmd" class="external-link"><code>vignettes/mutationalpatterns.Rmd</code></a></small>
       <div class="d-none name"><code>mutationalpatterns.Rmd</code></div>
@@ -83,9 +85,7 @@
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://umccr.github.io/sigrap/">sigrap</a></span><span class="op">)</span>
-<span class="co">#&gt; Warning: package 'sigrap' was built under R version 4.1.2</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://umccr.github.io/gpgr/" class="external-link">gpgr</a></span><span class="op">)</span>
-<span class="co">#&gt; Warning: package 'gpgr' was built under R version 4.1.2</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://doi.org/10.1186/s13073-018-0539-0" class="external-link">MutationalPatterns</a></span><span class="op">)</span>
 <span class="va">ref_genome</span> <span class="op">&lt;-</span> <span class="st">"BSgenome.Hsapiens.UCSC.hg38"</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va">ref_genome</span>, character.only <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
@@ -125,6 +125,10 @@
   ref_genome <span class="op">=</span> <span class="va">ref_genome</span>
 <span class="op">)</span>
 <span class="va">p_snvs</span><span class="op">$</span><span class="va">p_river</span> <span class="op">+</span> <span class="va">p_snvs</span><span class="op">$</span><span class="va">p_heatmap</span> <span class="op">+</span> <span class="va">p_snvs</span><span class="op">$</span><span class="va">p_spectrum</span> <span class="op">+</span> <span class="va">p_snvs</span><span class="op">$</span><span class="va">p_96_profile</span> <span class="op">+</span> <span class="fu">patchwork</span><span class="fu">::</span><span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_layout.html" class="external-link">plot_layout</a></span><span class="op">(</span>ncol <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>
+<span class="co">#&gt; Warning: `spread_()` was deprecated in tidyr 1.2.0.</span>
+<span class="co">#&gt; Please use `spread()` instead.</span>
+<span class="co">#&gt; <span style="color: #555555;">This warning is displayed once every 8 hours.</span></span>
+<span class="co">#&gt; <span style="color: #555555;">Call `lifecycle::last_lifecycle_warnings()` to see where this warning was generated.</span></span>
 <span class="co">#&gt; Warning: The `.dots` argument of `group_by()` is deprecated as of dplyr 1.0.0.</span>
 <span class="co">#&gt; <span style="color: #555555;">This warning is displayed once every 8 hours.</span></span>
 <span class="co">#&gt; <span style="color: #555555;">Call `lifecycle::last_lifecycle_warnings()` to see where this warning was generated.</span></span></code></pre></div>
@@ -191,7 +195,8 @@ Sig3
 0.35
 </td>
 <td style="text-align:left;">
-Breast, ovarian, pancreatic; germline + somatic BRCA1/BRCA2 mut; failure of DNA ds break-repair; many large indels.
+Breast, ovarian, pancreatic; germline + somatic BRCA1/BRCA2 mut; failure
+of DNA ds break-repair; many large indels.
 </td>
 <td style="text-align:left;">
 <img src="outputs/sig_plots/Sig/3.png">
@@ -211,7 +216,8 @@ Sig8
 0.25
 </td>
 <td style="text-align:left;">
-Breast cancer, medulloblastoma; many CC&gt;AA subs; weak strand bias for C&gt;A subs.
+Breast cancer, medulloblastoma; many CC&gt;AA subs; weak strand bias for
+C&gt;A subs.
 </td>
 <td style="text-align:left;">
 <img src="outputs/sig_plots/Sig/8.png">
@@ -251,7 +257,9 @@ Sig13
 0.07
 </td>
 <td style="text-align:left;">
-In 22 cancers; mostly cervical, bladder, breast; AID/APOBEC; C&gt;G mut; similar to sig2; maybe viral infection, retrotransposon jumping or tissue inflammation; kataegis.
+In 22 cancers; mostly cervical, bladder, breast; AID/APOBEC; C&gt;G mut;
+similar to sig2; maybe viral infection, retrotransposon jumping or
+tissue inflammation; kataegis.
 </td>
 <td style="text-align:left;">
 <img src="outputs/sig_plots/Sig/13.png">
@@ -271,7 +279,9 @@ Sig2
 0.04
 </td>
 <td style="text-align:left;">
-In 22 cancers; mostly cervical + bladder; AID/APOBEC; similar to sig13; maybe viral infection, retrotransposon jumping or tissue inflammation; exon TSB.
+In 22 cancers; mostly cervical + bladder; AID/APOBEC; similar to sig13;
+maybe viral infection, retrotransposon jumping or tissue inflammation;
+exon TSB.
 </td>
 <td style="text-align:left;">
 <img src="outputs/sig_plots/Sig/2.png">
@@ -291,7 +301,9 @@ Sig6
 0.03
 </td>
 <td style="text-align:left;">
-In 17 cancers; mostly colorectal + uterine; associated with defective DNA mismatch repair; found in microsatellite unstable tumors; many small indels.
+In 17 cancers; mostly colorectal + uterine; associated with defective
+DNA mismatch repair; found in microsatellite unstable tumors; many small
+indels.
 </td>
 <td style="text-align:left;">
 <img src="outputs/sig_plots/Sig/6.png">
@@ -311,7 +323,8 @@ Sig7
 0.03
 </td>
 <td style="text-align:left;">
-Skin, lip, head, neck or oral squamous cancers; ultraviolet light exposure; many CC&gt;TT subs; strong TSB with many C&gt;T mut.
+Skin, lip, head, neck or oral squamous cancers; ultraviolet light
+exposure; many CC&gt;TT subs; strong TSB with many C&gt;T mut.
 </td>
 <td style="text-align:left;">
 <img src="outputs/sig_plots/Sig/7.png">
@@ -331,7 +344,9 @@ Sig9
 0.03
 </td>
 <td style="text-align:left;">
-Chronic lymphocytic leukaemias, malignant B-cell lymphomas; mut pattern associated with polymerase H (implicated with AID during som hypermutation).
+Chronic lymphocytic leukaemias, malignant B-cell lymphomas; mut pattern
+associated with polymerase H (implicated with AID during som
+hypermutation).
 </td>
 <td style="text-align:left;">
 <img src="outputs/sig_plots/Sig/9.png">
@@ -351,7 +366,8 @@ Sig26
 0.02
 </td>
 <td style="text-align:left;">
-Breast, cervical, stomach cancer, uterine carcinoma; defective DNA mismatch repair.
+Breast, cervical, stomach cancer, uterine carcinoma; defective DNA
+mismatch repair.
 </td>
 <td style="text-align:left;">
 <img src="outputs/sig_plots/Sig/26.png">
@@ -391,7 +407,9 @@ Sig22
 0.01
 </td>
 <td style="text-align:left;">
-Urothelial (renal pelvis) carcinoma and liver cancers (very high and lower TMB, respectively); exposure to aristolochic acid; strong TSB for T&gt;A.
+Urothelial (renal pelvis) carcinoma and liver cancers (very high and
+lower TMB, respectively); exposure to aristolochic acid; strong TSB for
+T&gt;A.
 </td>
 <td style="text-align:left;">
 <img src="outputs/sig_plots/Sig/22.png">
@@ -431,7 +449,8 @@ Sig15
 0.01
 </td>
 <td style="text-align:left;">
-Stomach cancers and a single small cell lung carcinoma; defective DNA mismatch repair; many small indels;
+Stomach cancers and a single small cell lung carcinoma; defective DNA
+mismatch repair; many small indels;
 </td>
 <td style="text-align:left;">
 <img src="outputs/sig_plots/Sig/15.png">
@@ -451,7 +470,8 @@ Sig17
 0.01
 </td>
 <td style="text-align:left;">
-Oesophagus, breast, liver, lung adenocarcinoma, B-cell lymphoma, stomach and melanoma.
+Oesophagus, breast, liver, lung adenocarcinoma, B-cell lymphoma, stomach
+and melanoma.
 </td>
 <td style="text-align:left;">
 <img src="outputs/sig_plots/Sig/17.png">
@@ -471,7 +491,8 @@ Sig27
 0.00
 </td>
 <td style="text-align:left;">
-Subset of kidney clear cell carcinomas; strong TSB for T&gt;A; many small indels.
+Subset of kidney clear cell carcinomas; strong TSB for T&gt;A; many
+small indels.
 </td>
 <td style="text-align:left;">
 <img src="outputs/sig_plots/Sig/27.png">
@@ -1692,10 +1713,10 @@ source
 base
 </td>
 <td style="text-align:left;">
-4.1.1
+4.1.2
 </td>
 <td style="text-align:left;">
-2021-08-28
+2022-01-16
 </td>
 <td style="text-align:left;">
 local
@@ -1706,10 +1727,10 @@ local
 gpgr
 </td>
 <td style="text-align:left;">
-1.0.0
+1.2.1
 </td>
 <td style="text-align:left;">
-2021-12-22
+2022-02-09
 </td>
 <td style="text-align:left;">
 local
@@ -1734,10 +1755,10 @@ Bioconductor
 sigrap
 </td>
 <td style="text-align:left;">
-0.0.1
+0.0.2
 </td>
 <td style="text-align:left;">
-2021-12-22
+2022-03-17
 </td>
 <td style="text-align:left;">
 local
@@ -1763,7 +1784,7 @@ value
 version
 </td>
 <td style="text-align:left;">
-R version 4.1.1 (2021-08-10)
+R version 4.1.2 (2021-11-01)
 </td>
 </tr>
 <tr>
@@ -1771,7 +1792,7 @@ R version 4.1.1 (2021-08-10)
 os
 </td>
 <td style="text-align:left;">
-Ubuntu 20.04.3 LTS
+Ubuntu 20.04.4 LTS
 </td>
 </tr>
 <tr>
@@ -1827,7 +1848,7 @@ Etc/UTC
 date
 </td>
 <td style="text-align:left;">
-2021-12-22
+2022-03-17
 </td>
 </tr>
 <tr>
@@ -1835,7 +1856,7 @@ date
 pandoc
 </td>
 <td style="text-align:left;">
-2.16.2 @ /usr/share/miniconda/envs/pkgdown/bin/ (via rmarkdown)
+2.17.1.1 @ /usr/share/miniconda/envs/pkgdown/bin/ (via rmarkdown)
 </td>
 </tr>
 </tbody>
@@ -1849,12 +1870,14 @@ pandoc
 
     <footer><div class="pkgdown-footer-left">
   <p></p>
-<p>Developed by <a href="https://github.com/pdiakumis" class="external-link">Peter Diakumis</a>.</p>
+<p>Developed by <a href="https://github.com/pdiakumis" class="external-link">Peter
+Diakumis</a>.</p>
 </div>
 
 <div class="pkgdown-footer-right">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
+2.0.2.</p>
 </div>
 
     </footer>
