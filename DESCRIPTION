@@ -16,7 +16,6 @@ Depends:
 Remotes:
     umccr/gpgr,
     umccr/signature.tools.lib,
-    UMCUGenetics/mutSigExtractor,
     UMCUGenetics/CHORD
 Imports:
     assertthat,
@@ -26,16 +25,11 @@ Imports:
     dplyr,
     ggplot2,
     gpgr (>= 1.0.0),
-    gt,
-    gtools,
-    jsonlite,
     MutationalPatterns,
-    mutSigExtractor,
     readr,
     rlang,
     signature.tools.lib,
     StructuralVariantAnnotation,
-    stringr,
     tidyr,
     VariantAnnotation
 Suggests:
