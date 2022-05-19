@@ -313,10 +313,12 @@ hrdetect_run <- function(nm, snvindel_vcf, sv_vcf, cnv_tsv, genome = "hg38", snv
   snvindel <- hrdetect_prep_snvindel(snvindel_vcf, nm, genome, snvoutdir, sigsToUse = sigsToUse)
   snv <- snvindel$snv_results |>
     dplyr::filter(.data$sig %in% c("Signature.3", "Signature.8")) |>
+    dplyr::select(-.data$pvalue) |>
     tidyr::pivot_wider(
       names_from = "sig", values_from = "exposure"
     )
-
+  # make sure this is a single-row tibble, else all hell breaks loose
+  assertthat::assert_that(nrow(snv) == 1, all(colnames(snv) %in% c("Signature.3", "Signature.8")))
   indel <- snvindel$indel_results$del.mh.prop
   sv <- hrdetect_prep_sv(sv_vcf, nm, genome)
   cnv <- hrdetect_prep_cnv(cnv_tsv, nm)
