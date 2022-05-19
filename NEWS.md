@@ -1,5 +1,11 @@
 # sigrap dev
 
+# sigrap 0.0.3 (2022-05-19)
+
+- :bug: Fix bug when running HRDetect
+  ([issue3](https://github.com/umccr/sigrap/issues/3),
+  [pr4](https://github.com/umccr/sigrap/pull/4)).
+
 # sigrap 0.0.1 (2021-12-22)
 
 - Initial release. Moving signature tool wrappers (CHORD, HRDetect,
