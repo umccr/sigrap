@@ -10,7 +10,6 @@ hrdetect_run(
   sv_vcf,
   cnv_tsv,
   genome = "hg38",
-  snvoutdir = tempdir(),
   sigsToUse = c(1, 2, 3, 5, 6, 8, 13, 17, 18, 20, 26, 30),
   outpath = NULL
 )
@@ -25,8 +24,6 @@ hrdetect_run(
 \item{cnv_tsv}{Path to \code{purple.cnv.somatic.tsv} file.}
 
 \item{genome}{Human genome version (default: hg38. hg19 means GRCh37).}
-
-\item{snvoutdir}{Directory to output SNV signature analysis results.}
 
 \item{sigsToUse}{COSMIC SNV signatures to use.}
 
@@ -49,8 +46,7 @@ sv_vcf <- system.file("extdata/umccrise/sv/manta.vcf.gz", package = "gpgr")
 cnv_tsv <- system.file("extdata/purple/purple.cnv.somatic.tsv", package = "gpgr")
 nm <- "SampleA"
 genome <- "hg38"
-snvoutdir <- tempdir()
-(res <- hrdetect_run(nm, snvindel_vcf, sv_vcf, cnv_tsv, genome, snvoutdir))
-# hrdetect_run(nm, snvindel_vcf, sv_vcf, cnv_tsv, genome, snvoutdir,
+(res <- hrdetect_run(nm, snvindel_vcf, sv_vcf, cnv_tsv, genome))
+# hrdetect_run(nm, snvindel_vcf, sv_vcf, cnv_tsv, genome,
 #              outpath = "nogit/hrdetect_results.json.gz")
 }

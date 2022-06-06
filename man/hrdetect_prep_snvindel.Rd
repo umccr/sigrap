@@ -8,7 +8,6 @@ hrdetect_prep_snvindel(
   x,
   nm = NULL,
   genome = "hg38",
-  outdir = NULL,
   sigsToUse = c(1, 2, 3, 5, 6, 8, 13, 17, 18, 20, 26, 30)
 )
 }
@@ -18,8 +17,6 @@ hrdetect_prep_snvindel(
 \item{nm}{Sample name.}
 
 \item{genome}{Human genome version (default: hg38. hg19 means GRCh37).}
-
-\item{outdir}{Directory to output analysis results.}
 
 \item{sigsToUse}{COSMIC signatures to use.}
 }
@@ -35,5 +32,5 @@ Prepares VCF with SNVs/INDELs for use with HRDetect.
 }
 \examples{
 x <- system.file("extdata/umccrise/snv/somatic-ensemble-PASS.vcf.gz", package = "gpgr")
-(l <- hrdetect_prep_snvindel(x, nm = "sampleA", outdir = tempdir()))
+(l <- hrdetect_prep_snvindel(x, nm = "sampleA"))
 }
