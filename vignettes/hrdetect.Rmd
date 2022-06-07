@@ -45,8 +45,7 @@ res <- sigrap::hrdetect_run(
   snvindel_vcf = snvindel_vcf,
   sv_vcf = sv_vcf,
   cnv_tsv = cnv_tsv,
-  genome = "hg38",
-  snvoutdir = tempdir()
+  genome = "hg38"
 )
 ```
 
@@ -55,7 +54,7 @@ res <- sigrap::hrdetect_run(
 ```{r res}
 cbind(var = colnames(res), value = unlist(res[1, ])) |>
   dplyr::as_tibble(.name_repair = "check_unique") |>
-  knitr::kable(format = "html", caption = "HRDetect results.")
+  knitr::kable(caption = "HRDetect results.")
 ```
 
 ## Session Info

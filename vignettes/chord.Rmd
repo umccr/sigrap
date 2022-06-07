@@ -65,7 +65,7 @@ str(res, list.len = 4)
 
 cbind(var = colnames(res$prediction), value = unlist(res$prediction[1, ])) |>
   dplyr::as_tibble(.name_repair = "check_unique") |>
-  knitr::kable(format = "html", caption = "CHORD results.")
+  knitr::kable(caption = "CHORD results.")
 
 # grab first and last few of the contexts
 col_ind <- c(1:6, (ncol(res$contexts) - 10):ncol(res$contexts))
@@ -76,7 +76,7 @@ res$contexts |>
   dplyr::mutate(n = row_number()) |>
   dplyr::select(n, dplyr::everything()) |>
   dplyr::slice(col_ind) |>
-  knitr::kable(format = "html", caption = "Sample of rows from contexts counts.")
+  knitr::kable(caption = "Sample of rows from contexts counts.")
 ```
 
 ## Session Info
