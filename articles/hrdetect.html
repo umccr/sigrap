@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">sigrap</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.4</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -75,7 +75,7 @@
   <main id="main"><div class="page-header">
       <img src="" class="logo" alt=""><h1>HRDetect</h1>
             
-            <h4 data-toc-skip class="date">2022-05-19</h4>
+            <h4 data-toc-skip class="date">2022-06-07</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/umccr/sigrap/blob/HEAD/vignettes/hrdetect.Rmd" class="external-link"><code>vignettes/hrdetect.Rmd</code></a></small>
       <div class="d-none name"><code>hrdetect.Rmd</code></div>
@@ -115,14 +115,20 @@ with PURPLE somatic CNV files, with the
   snvindel_vcf <span class="op">=</span> <span class="va">snvindel_vcf</span>,
   sv_vcf <span class="op">=</span> <span class="va">sv_vcf</span>,
   cnv_tsv <span class="op">=</span> <span class="va">cnv_tsv</span>,
-  genome <span class="op">=</span> <span class="st">"hg38"</span>,
-  snvoutdir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>
+  genome <span class="op">=</span> <span class="st">"hg38"</span>
 <span class="op">)</span>
+<span class="co">#&gt; Warning: replacing previous import 'utils::download.file' by</span>
+<span class="co">#&gt; 'restfulr::download.file' when loading 'rtracklayer'</span>
+<span class="co">#&gt; [info HRDetect_pipeline] HRDetect pipeline starting!</span>
 <span class="co">#&gt; [info HRDetect_pipeline] Single Nucleotide Variations</span>
+<span class="co">#&gt; [info HRDetect_pipeline] no SNV catalogues or SNV mutations provided, no signature fit performed.</span>
 <span class="co">#&gt; [info HRDetect_pipeline] Structural Variants (Rearrangements)</span>
-<span class="co">#&gt; [info HRDetect_pipeline] Some samples in the input data_matrix do not have the exposures for SV3 and SV5, checking if the user supplied SV catalogues or BEDPE files for those samples.</span>
-<span class="co">#&gt; [info HRDetect_pipeline] Rearrangement signatures exposures will be estiamated for the following samples: sample_A</span>
-<span class="co">#&gt; [info HRDetect_pipeline] Running Signature fit with 100 bootstraps. Increase sparsity by removing exposures with 5% threshold of total mutations and 0.05 threshold of p-value, i.e. exposure of a signature in a sample is set to zero if the probability of having less than 5% of total mutations assigned to that signature is greather than 0.05.</span>
+<span class="co">#&gt; [info HRDetect_pipeline] Running SV signature extraction using the Fit method for samples sample_A.</span>
+<span class="co">#&gt; [info signatureFit_pipeline] signatureFit pipeline starting!</span>
+<span class="co">#&gt; [info signatureFit_pipeline] no organ provided, so using the reference signatures appropriate for the signature version RefSigv1 and mutation type rearr.</span>
+<span class="co">#&gt; [info signatureFit_pipeline] all set, running Fit.</span>
+<span class="co">#&gt; [info signatureFit_pipeline] signatureFit pipeline completed!</span>
+<span class="co">#&gt; [info HRDetect_pipeline] SV signatures fit completed.</span>
 <span class="co">#&gt; [info HRDetect_pipeline] Deletions at Micro-homology (Indels)</span>
 <span class="co">#&gt; [info HRDetect_pipeline] HRD-LOH index (CNV)</span>
 <span class="co">#&gt; [info HRDetect_pipeline] Computing HRDetect score and feature contributions for the following samples: sample_A</span>
@@ -134,91 +140,49 @@ with PURPLE somatic CNV files, with the
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span>var <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span>, value <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist</a></span><span class="op">(</span><span class="va">res</span><span class="op">[</span><span class="fl">1</span>, <span class="op">]</span><span class="op">)</span><span class="op">)</span> |&gt;
   <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span>.name_repair <span class="op">=</span> <span class="st">"check_unique"</span><span class="op">)</span> |&gt;
-  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"html"</span>, caption <span class="op">=</span> <span class="st">"HRDetect results."</span><span class="op">)</span></code></pre></div>
+  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span>caption <span class="op">=</span> <span class="st">"HRDetect results."</span><span class="op">)</span></code></pre></div>
 <table class="table">
-<caption>
-HRDetect results.
-</caption>
-<thead><tr>
-<th style="text-align:left;">
-var
-</th>
-<th style="text-align:left;">
-value
-</th>
+<caption>HRDetect results.</caption>
+<thead><tr class="header">
+<th align="left">var</th>
+<th align="left">value</th>
 </tr></thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-sample
-</td>
-<td style="text-align:left;">
-sample_A
-</td>
+<tr class="odd">
+<td align="left">sample</td>
+<td align="left">sample_A</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-Probability
-</td>
-<td style="text-align:left;">
-0.806
-</td>
+<tr class="even">
+<td align="left">Probability</td>
+<td align="left">0.807</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-intercept
-</td>
-<td style="text-align:left;">
--3.364
-</td>
+<tr class="odd">
+<td align="left">intercept</td>
+<td align="left">-3.364</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-del.mh.prop
-</td>
-<td style="text-align:left;">
-6.195
-</td>
+<tr class="even">
+<td align="left">del.mh.prop</td>
+<td align="left">6.195</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-SNV3
-</td>
-<td style="text-align:left;">
-2.439
-</td>
+<tr class="odd">
+<td align="left">SNV3</td>
+<td align="left">2.445</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-SV3
-</td>
-<td style="text-align:left;">
--0.877
-</td>
+<tr class="even">
+<td align="left">SV3</td>
+<td align="left">-0.877</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-SV5
-</td>
-<td style="text-align:left;">
--1.105
-</td>
+<tr class="odd">
+<td align="left">SV5</td>
+<td align="left">-1.105</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-hrdloh_index
-</td>
-<td style="text-align:left;">
--1.952
-</td>
+<tr class="even">
+<td align="left">hrdloh_index</td>
+<td align="left">-1.952</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-SNV8
-</td>
-<td style="text-align:left;">
-0.086
-</td>
+<tr class="odd">
+<td align="left">SNV8</td>
+<td align="left">0.086</td>
 </tr>
 </tbody>
 </table>
@@ -243,20 +207,20 @@ SNV8
 </tr>
 <tr class="even">
 <td align="left">gpgr</td>
-<td align="left">1.2.1</td>
-<td align="left">2022-02-09</td>
+<td align="left">1.2.3</td>
+<td align="left">2022-06-07</td>
 <td align="left">local</td>
 </tr>
 <tr class="odd">
 <td align="left">signature.tools.lib</td>
-<td align="left">0.0.0.9000</td>
-<td align="left">2021-12-06</td>
+<td align="left">2.1.2</td>
+<td align="left">2022-06-04</td>
 <td align="left">local</td>
 </tr>
 <tr class="even">
 <td align="left">sigrap</td>
-<td align="left">0.0.3</td>
-<td align="left">2022-05-19</td>
+<td align="left">0.0.4</td>
+<td align="left">2022-06-07</td>
 <td align="left">local</td>
 </tr>
 </tbody>
@@ -306,7 +270,7 @@ SNV8
 </tr>
 <tr class="odd">
 <td align="left">date</td>
-<td align="left">2022-05-19</td>
+<td align="left">2022-06-07</td>
 </tr>
 <tr class="even">
 <td align="left">pandoc</td>
