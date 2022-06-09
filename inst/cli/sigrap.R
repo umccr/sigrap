@@ -1,57 +1,34 @@
-#!/usr/bin/env Rscript --vanilla
+#!/usr/bin/env Rscript
 
 suppressPackageStartupMessages(require(argparse))
+suppressPackageStartupMessages(require(cli))
 suppressPackageStartupMessages(require(glue))
 suppressPackageStartupMessages(require(sigrap))
 
-
-p <- argparse::ArgumentParser(description = "Somatic signature wrappers", prog = "sigrap")
+prog_nm <- "sigrap"
+sigrap_version <- as.character(packageVersion("sigrap"))
+p <- argparse::ArgumentParser(description = "Somatic signature wrappers", prog = prog_nm)
+p$add_argument("-v", "--version", action = "version", version = glue::glue("{prog_nm} {sigrap_version}"))
 subparser_name <- "subparser_name"
 subp <- p$add_subparsers(help = "sub-command help", dest = subparser_name)
 
-#--- HRDetect ---#
-hrdetect <- subp$add_parser("hrdetect", help = "hrdetect help")
-hrdetect$add_argument("--sample", help = "Sample name.", required = TRUE)
-hrdetect$add_argument("--snv", help = "Input SNV (VCF format).", required = TRUE)
-hrdetect$add_argument("--sv", help = "Input SV (VCF format).", required = TRUE)
-hrdetect$add_argument("--cnv", help = "Input CNV (TSV format).", required = TRUE)
-hrdetect$add_argument("--out", help = "Output file ['hrdetect.json.gz'].", default = "hrdetect.json.gz")
+source(system.file("cli/hrdetect.R", package = "sigrap"))
+source(system.file("cli/chord.R", package = "sigrap"))
+source(system.file("cli/mutpat.R", package = "sigrap"))
 
-#--- CHORD ---#
-chord <- subp$add_parser("chord", help = "chord help")
-chord$add_argument("--sample", help = "Sample name.", required = TRUE)
-chord$add_argument("--snv", help = "Input SNV (VCF format).", required = TRUE)
-chord$add_argument("--sv", help = "Input SV (VCF format).", required = TRUE)
-chord$add_argument("--out", help = "Output file ['chord.json.gz']", default = "chord.json.gz")
-
-#--- MutationalPatterns ---#
-mutpat <- subp$add_parser("mutpat", help = "mutationalpatterns help")
-mutpat$add_argument("--sample", help = "Sample name.", required = TRUE)
-mutpat$add_argument("--snv", help = "Input SNV file (VCF format).", required = TRUE)
-mutpat$add_argument("--outdir", help = "Output directory to write results to", required = TRUE)
-
+hrdetect_add_args(subp)
+chord_add_args(subp)
+mutpat_add_args(subp)
 
 args <- p$parse_args()
 if (length(args$subparser_name) == 0) {
   p$print_help()
 } else if (args$subparser_name == "hrdetect") {
-  # print(c("You've called HRDetect. Here are the arguments: ", args))
-  sigrap::hrdetect_run(
-    nm = args$sample, snvindel_vcf = args$snv, sv_vcf = args$sv,
-    cnv_tsv = args$cnv, outpath = args$out
-  )
+  hrdetect_parse_args(args)
 } else if (args$subparser_name == "chord") {
-  # print(c("You've called CHORD. Here are the arguments: ", args))
-  sigrap::chord_run(
-    vcf.snv = args$snv, vcf.sv = args$sv,
-    sample.name = args$sample, outpath = args$out
-  )
+  chord_parse_args(args)
 } else if (args$subparser_name == "mutpat") {
-  # print(c("You've called MutationalPatterns. Here are the arguments: ", args))
-  sigrap::sig_workflow_run(vcf = args$snv, sample_nm = args$sample, outdir = args$outdir)
+  mutpat_parse_args(args)
 } else {
   stop("NO IDEA HOW IT GOT TO THIS...")
 }
-
-# hrdetect$print_help()
-# chord$print_help()
