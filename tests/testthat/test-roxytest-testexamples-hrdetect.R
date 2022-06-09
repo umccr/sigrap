@@ -39,12 +39,12 @@ test_that("Function hrdetect_prep_snvindel() @ L154", {
   x <- system.file("extdata/umccrise/snv/somatic-ensemble-PASS.vcf.gz", package = "gpgr")
   (l <- hrdetect_prep_snvindel(x, nm = "sampleA"))
   expect_equal(c("snv_results", "indel_results"), names(l))
-  expect_equal(c("sig", "exposure", "pvalue"), colnames(l[["snv_results"]]))
+  expect_equal(c("sig", "exposure"), colnames(l[["snv_results"]]))
   expect_equal(colnames(l[["indel_results"]])[c(1, 7)], c("sample", "del.mh.prop"))
 })
 
 
-test_that("Function hrdetect_prep_sv() @ L234", {
+test_that("Function hrdetect_prep_sv() @ L227", {
   
   x <- system.file("extdata/umccrise/sv/manta.vcf.gz", package = "gpgr")
   nm <- "SampleA"
@@ -54,7 +54,7 @@ test_that("Function hrdetect_prep_sv() @ L234", {
 })
 
 
-test_that("Function hrdetect_prep_cnv() @ L262", {
+test_that("Function hrdetect_prep_cnv() @ L255", {
   
   x <- system.file("extdata/purple/purple.cnv.somatic.tsv", package = "gpgr")
   (l <- hrdetect_prep_cnv(x, nm = "SampleA"))
@@ -63,7 +63,7 @@ test_that("Function hrdetect_prep_cnv() @ L262", {
 })
 
 
-test_that("Function hrdetect_run() @ L307", {
+test_that("Function hrdetect_run() @ L300", {
   
   snvindel_vcf <- system.file(
     "extdata/umccrise/snv/somatic-ensemble-PASS.vcf.gz",
