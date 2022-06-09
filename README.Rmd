@@ -1,10 +1,16 @@
 ---
-output: github_document
+output:
+  github_document:
+    toc: true
+
 ---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
-  collapse = TRUE,
+  collapse = FALSE,
+  comment = "",
   fig.path = "man/figures/README-",
   out.width = "100%"
 )
@@ -12,13 +18,14 @@ knitr::opts_chunk$set(
 
 # sigrap
 
+Wrappers for somatic mutation signature analysis tools
+(HRDetect, CHORD, MutationalPatterns).
+
+- See <https://umccr.github.io/sigrap/>
+
 <!-- badges: start -->
 [![Conda install](https://anaconda.org/umccr/r-sigrap/badges/installer/conda.svg)](https://anaconda.org/umccr/r-sigrap)
 <!-- badges: end -->
-
-Wrappers for somatic mutation signature analysis tools.
-
-- See <https://umccr.github.io/sigrap/>
 
 ## Installation
 
@@ -50,48 +57,45 @@ vignette at <https://umccr.github.io/sigrap/articles/chord.html>.
 Wraps functionality from [MutationalPatterns](https://github.com/UMCUGenetics/MutationalPatterns) - see
 vignette at <https://umccr.github.io/sigrap/articles/mutationalpatterns.html>.
 
-## CLI (v0.0.1)
+## CLI
 
-```text
-#------- sigrap -------#
-$ inst/src/sigrap.R --help
-usage: sigrap [-h] {hrdetect,chord,mutpat} ...
+```{bash echo=FALSE}
+shopt -s expand_aliases
+sigrap_cli=$(Rscript -e 'x = system.file("cli/sigrap.R", package = "sigrap"); cat(x, "\n")')
+echo "sigrap_cli is ${sigrap_cli}"
+alias sigrap=$(which $(echo $sigrap_cli))
+echo "sigrap alias is: "
+echo $(alias sigrap)
 
-positional arguments:
-  {hrdetect,chord,mutpat}
-                        sub-command help
-    hrdetect            hrdetect help
-    chord               chord help
-    mutpat              mutationalpatterns help
-
-#------- hrdetect -------#
-$ inst/src/sigrap.R hrdetect --help
-usage: sigrap hrdetect [-h] --sample SAMPLE --snv SNV --sv SV --cnv CNV
-                     [--out OUT]
-
-optional arguments:
-  --sample SAMPLE  Sample name.
-  --snv SNV        Input SNV (VCF format).
-  --sv SV          Input SV (VCF format).
-  --cnv CNV        Input CNV (TSV format).
-  --out OUT        Output file ['hrdetect.json.gz'].
-
-#------- chord -------#
-$ inst/src/sigrap.R chord --help
-usage: sigrap chord [-h] --sample SAMPLE --snv SNV --sv SV [--out OUT]
-
-optional arguments:
-  --sample SAMPLE  Sample name.
-  --snv SNV        Input SNV (VCF format).
-  --sv SV          Input SV (VCF format).
-  --out OUT        Output file ['chord.json.gz']
-
-#------- mutpat -------#
-$ inst/src/sigrap.R mutpat --help
-usage: sigrap mutpat [-h] --sample SAMPLE --snv SNV --outdir OUTDIR
-
-optional arguments:
-  --sample SAMPLE  Sample name.
-  --snv SNV        Input SNV file (VCF format).
-  --outdir OUTDIR  Output directory to write results to
+echo "$ sigrap --help"
+sigrap --help
+echo ""
+echo ""
+echo ""
+echo "$ sigrap --version"
+sigrap --version
+echo ""
+echo ""
+echo ""
+echo "#------- HRDetect -------#"
+echo ""
+echo ""
+echo "$ sigrap hrdetect --help"
+sigrap hrdetect --help
+echo ""
+echo ""
+echo ""
+echo "#------- CHORD -------#"
+echo ""
+echo ""
+echo "$ sigrap chord --help"
+sigrap chord --help
+echo ""
+echo ""
+echo ""
+echo "#------- MutationalPatterns -------#"
+echo ""
+echo ""
+echo "$ sigrap mutpat --help"
+sigrap mutpat --help
 ```

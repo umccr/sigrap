@@ -7,4 +7,5 @@ dependencies:
   - r-kableextra
   - r-patchwork
   - r-pkgdown
+  - r-rmarkdown
   - pandoc

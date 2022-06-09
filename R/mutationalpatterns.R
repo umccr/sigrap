@@ -292,7 +292,7 @@ sig_workflow_run <- function(vcf, sample_nm, ref_genome = "hg38", outdir) {
     }
   }
 
-  cli::cli_h2(glue::glue("{date_log()} Start of MutationalPatterns workflow"))
+  cli::cli_h2(glue::glue("{gpgr::date_log()} Start of MutationalPatterns workflow"))
   # import VCF
   gr <- MutationalPatterns::read_vcfs_as_granges(
     vcf_files = vcf,
@@ -355,7 +355,7 @@ sig_workflow_run <- function(vcf, sample_nm, ref_genome = "hg38", outdir) {
     }() |>
     sigrap::sig_contribution_table(type = "ID")
 
-  cli::cli_h2(glue::glue("{date_log()} Saving MutationalPatterns results to\n'{outdir}'"))
+  cli::cli_h2(glue::glue("{gpgr::date_log()} Saving MutationalPatterns results to\n'{outdir}'"))
   save_plot_list(p_snv, file.path(outdir, "plot/snv"))
   save_plot_list(p_dbs, file.path(outdir, "plot/dbs"))
   save_plot_list(p_indel, file.path(outdir, "plot/indel"))
@@ -364,5 +364,5 @@ sig_workflow_run <- function(vcf, sample_nm, ref_genome = "hg38", outdir) {
   gpgr::write_jsongz(x = sigs_dbs, path = file.path(outdir, "sigs/dbs.json.gz"))
   gpgr::write_jsongz(x = sigs_indel, path = file.path(outdir, "sigs/indel.json.gz"))
 
-  cli::cli_h2(glue::glue("{date_log()} End of MutationalPatterns workflow"))
+  cli::cli_h2(glue::glue("{gpgr::date_log()} End of MutationalPatterns workflow"))
 }
