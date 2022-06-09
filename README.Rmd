@@ -21,7 +21,7 @@ knitr::opts_chunk$set(
 Wrappers for somatic mutation signature analysis tools
 (HRDetect, CHORD, MutationalPatterns).
 
-- See <https://umccr.github.io/sigrap/>
+- Docs: <https://umccr.github.io/sigrap/>
 
 <!-- badges: start -->
 [![Conda install](https://anaconda.org/umccr/r-sigrap/badges/installer/conda.svg)](https://anaconda.org/umccr/r-sigrap)
@@ -62,10 +62,7 @@ vignette at <https://umccr.github.io/sigrap/articles/mutationalpatterns.html>.
 ```{bash echo=FALSE}
 shopt -s expand_aliases
 sigrap_cli=$(Rscript -e 'x = system.file("cli/sigrap.R", package = "sigrap"); cat(x, "\n")')
-echo "sigrap_cli is ${sigrap_cli}"
 alias sigrap=$(which $(echo $sigrap_cli))
-echo "sigrap alias is: "
-echo $(alias sigrap)
 
 echo "$ sigrap --help"
 sigrap --help

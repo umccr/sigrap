@@ -15,7 +15,7 @@
 Wrappers for somatic mutation signature analysis tools (HRDetect, CHORD,
 MutationalPatterns).
 
--   See <https://umccr.github.io/sigrap/>
+-   Docs: <https://umccr.github.io/sigrap/>
 
 <!-- badges: start -->
 
@@ -59,9 +59,6 @@ see vignette at
 
 ## CLI
 
-    sigrap_cli is /Library/Frameworks/R.framework/Versions/4.2-arm64/Resources/library/sigrap/cli/sigrap.R 
-    sigrap alias is: 
-    alias sigrap='/Library/Frameworks/R.framework/Versions/4.2-arm64/Resources/library/sigrap/cli/sigrap.R'
     $ sigrap --help
     usage: sigrap [-h] [-v] {hrdetect,chord,mutpat} ...
 
