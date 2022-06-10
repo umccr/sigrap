@@ -12,3 +12,5 @@
 ^conda$
 ^\.github$
 ^vignettes$
+^Dockerfile$
+^\.dockerignore$
