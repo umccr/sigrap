@@ -1,0 +1,9 @@
+name: sigrap
+
+channels:
+  - umccr
+  - conda-forge
+  - bioconda
+
+dependencies:
+  - r-sigrap ==0.0.4 # versioned by bump2version
