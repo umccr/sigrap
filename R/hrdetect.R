@@ -147,7 +147,7 @@ hrdetect_read_purple_cnv <- function(x) {
 #' (l <- hrdetect_prep_snvindel(x, nm = "sampleA"))
 #' @testexamples
 #' expect_equal(c("snv_results", "indel_results"), names(l))
-#' expect_equal(c("sig", "exposure", "pvalue"), colnames(l[["snv_results"]]))
+#' expect_equal(c("sig", "exposure"), colnames(l[["snv_results"]]))
 #' expect_equal(colnames(l[["indel_results"]])[c(1, 7)], c("sample", "del.mh.prop"))
 #'
 #' @export
@@ -169,10 +169,12 @@ hrdetect_prep_snvindel <- function(x, nm = NULL, genome = "hg38",
     subs = snvindel_tabs[["snv"]],
     genome.v = genome
   )[["catalogue"]]
-  assertthat::assert_that(inherits(snv_catalogue, "data.frame"),
-                          ncol(snv_catalogue) == 1,
-                          colnames(snv_catalogue) == "catalogue",
-                          nrow(snv_catalogue) == 96)
+  assertthat::assert_that(
+    inherits(snv_catalogue, "data.frame"),
+    ncol(snv_catalogue) == 1,
+    colnames(snv_catalogue) == "catalogue",
+    nrow(snv_catalogue) == 96
+  )
 
   subs_fit_res <- signature.tools.lib::Fit(
     catalogues = snv_catalogue,
@@ -184,7 +186,8 @@ hrdetect_prep_snvindel <- function(x, nm = NULL, genome = "hg38",
 
   assertthat::assert_that(
     length(subs_fit_res) == 16,
-    "exposures" %in% names(subs_fit_res))
+    "exposures" %in% names(subs_fit_res)
+  )
 
   snv_exp <- subs_fit_res[["exposures"]] |>
     t() |>
@@ -305,8 +308,10 @@ hrdetect_run <- function(nm, snvindel_vcf, sv_vcf, cnv_tsv, genome = "hg38",
     genome <- "hg19"
   }
 
-  snvindel <- hrdetect_prep_snvindel(x = snvindel_vcf, nm = nm,
-                                     genome = genome, sigsToUse = sigsToUse)
+  snvindel <- hrdetect_prep_snvindel(
+    x = snvindel_vcf, nm = nm,
+    genome = genome, sigsToUse = sigsToUse
+  )
   snv <- snvindel[["snv_results"]] |>
     dplyr::filter(.data$sig %in% c("Signature3", "Signature8")) |>
     tidyr::pivot_wider(
