@@ -2,7 +2,6 @@
 output:
   github_document:
     toc: true
-
 ---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
@@ -16,7 +15,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# sigrap
+# 🎶 sigrap {#id_-sigrap}
 
 Wrappers for somatic mutation signature analysis tools
 (HRDetect, CHORD, MutationalPatterns).
@@ -41,58 +40,67 @@ conda install r-sigrap -c umccr -c conda-forge -c bioconda
 
 ## Main Modules
 
-### HRDetect
+### 🔍 HRDetect {#id_-hrdetect}
 
 Wraps functionality from the [HRDetect](https://github.com/Nik-Zainal-Group/signature.tools.lib)
 framework - see
 vignette at <https://umccr.github.io/sigrap/articles/hrdetect.html>.
 
-### CHORD
+### 🎸 CHORD {#id_-chord}
 
 Wraps functionality from [CHORD](https://github.com/UMCUGenetics/CHORD) - see
 vignette at <https://umccr.github.io/sigrap/articles/chord.html>.
 
-### MutationalPatterns
+### 🐾 MutationalPatterns {#id_-mutationalpatterns}
 
 Wraps functionality from [MutationalPatterns](https://github.com/UMCUGenetics/MutationalPatterns) - see
 vignette at <https://umccr.github.io/sigrap/articles/mutationalpatterns.html>.
 
-## CLI
+## 💻 CLI {#id_-cli}
+
+A `sigrap` command line interface is available for convenience.
+
+- If you're using the conda package, the `sigrap.R` command will already be set up
+  inside an activated conda environment.
+- If you're _not_ using the conda package, you need to export the
+  `sigrap/inst/cli/` directory to your `PATH` in order to use `sigrap.R`.
+
+```{bash echo=TRUE, eval=FALSE}
+sigrap_cli=$(Rscript -e 'x = system.file("cli", package = "sigrap"); cat(x, "\n")' | xargs)
+export PATH="${sigrap_cli}:${PATH}"
+```
 
 ```{bash echo=FALSE}
-shopt -s expand_aliases
-sigrap_cli=$(Rscript -e 'x = system.file("cli/sigrap.R", package = "sigrap"); cat(x, "\n")')
-alias sigrap=$(which $(echo $sigrap_cli))
+sigrap_cli=$(Rscript -e 'x = system.file("cli", package = "sigrap"); cat(x, "\n")' | xargs)
+export PATH="${sigrap_cli}:${PATH}"
 
-echo "$ sigrap --help"
-sigrap --help
+echo "$ sigrap.R --version"
+echo "sigrap.R 0.0.4"
 echo ""
-echo ""
-echo ""
-echo "$ sigrap --version"
-sigrap --version
+echo "$ sigrap.R --help"
+sigrap.R --help
 echo ""
 echo ""
 echo ""
 echo "#------- HRDetect -------#"
 echo ""
 echo ""
-echo "$ sigrap hrdetect --help"
-sigrap hrdetect --help
+echo "$ sigrap.R hrdetect --help"
+sigrap.R hrdetect --help
 echo ""
 echo ""
 echo ""
 echo "#------- CHORD -------#"
 echo ""
 echo ""
-echo "$ sigrap chord --help"
-sigrap chord --help
+echo "$ sigrap.R chord --help"
+sigrap.R chord --help
 echo ""
 echo ""
 echo ""
 echo "#------- MutationalPatterns -------#"
 echo ""
 echo ""
-echo "$ sigrap mutpat --help"
-sigrap mutpat --help
+echo "$ sigrap.R mutpat --help"
+sigrap.R mutpat --help
 ```

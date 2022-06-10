@@ -1,16 +1,16 @@
 
--   <a href="#sigrap" id="toc-sigrap">sigrap</a>
+-   <a href="#id_-sigrap" id="toc-id_-sigrap">🎶 sigrap</a>
     -   <a href="#installation" id="toc-installation">Installation</a>
     -   <a href="#main-modules" id="toc-main-modules">Main Modules</a>
-        -   <a href="#hrdetect" id="toc-hrdetect">HRDetect</a>
-        -   <a href="#chord" id="toc-chord">CHORD</a>
-        -   <a href="#mutationalpatterns"
-            id="toc-mutationalpatterns">MutationalPatterns</a>
-    -   <a href="#cli" id="toc-cli">CLI</a>
+        -   <a href="#id_-hrdetect" id="toc-id_-hrdetect">🔍 HRDetect</a>
+        -   <a href="#id_-chord" id="toc-id_-chord">🎸 CHORD</a>
+        -   <a href="#id_-mutationalpatterns" id="toc-id_-mutationalpatterns">🐾
+            MutationalPatterns</a>
+    -   <a href="#id_-cli" id="toc-id_-cli">💻 CLI</a>
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# sigrap
+# 🎶 sigrap
 
 Wrappers for somatic mutation signature analysis tools (HRDetect, CHORD,
 MutationalPatterns).
@@ -37,29 +37,45 @@ conda install r-sigrap -c umccr -c conda-forge -c bioconda
 
 ## Main Modules
 
-### HRDetect
+### 🔍 HRDetect
 
 Wraps functionality from the
 [HRDetect](https://github.com/Nik-Zainal-Group/signature.tools.lib)
 framework - see vignette at
 <https://umccr.github.io/sigrap/articles/hrdetect.html>.
 
-### CHORD
+### 🎸 CHORD
 
 Wraps functionality from
 [CHORD](https://github.com/UMCUGenetics/CHORD) - see vignette at
 <https://umccr.github.io/sigrap/articles/chord.html>.
 
-### MutationalPatterns
+### 🐾 MutationalPatterns
 
 Wraps functionality from
 [MutationalPatterns](https://github.com/UMCUGenetics/MutationalPatterns) -
 see vignette at
 <https://umccr.github.io/sigrap/articles/mutationalpatterns.html>.
 
-## CLI
+## 💻 CLI
 
-    $ sigrap --help
+A `sigrap` command line interface is available for convenience.
+
+-   If you’re using the conda package, the `sigrap.R` command will
+    already be set up inside an activated conda environment.
+-   If you’re *not* using the conda package, you need to export the
+    `sigrap/inst/cli/` directory to your `PATH` in order to use
+    `sigrap.R`.
+
+``` bash
+sigrap_cli=$(Rscript -e 'x = system.file("cli", package = "sigrap"); cat(x, "\n")' | xargs)
+export PATH="${sigrap_cli}:${PATH}"
+```
+
+    $ sigrap.R --version
+    sigrap.R 0.0.4
+
+    $ sigrap.R --help
     usage: sigrap [-h] [-v] {hrdetect,chord,mutpat} ...
 
     Somatic signature wrappers
@@ -77,15 +93,10 @@ see vignette at
 
 
 
-    $ sigrap --version
-    sigrap 0.0.4
-
-
-
     #------- HRDetect -------#
 
 
-    $ sigrap hrdetect --help
+    $ sigrap.R hrdetect --help
     usage: sigrap hrdetect [-h] --sample SAMPLE --snv SNV --sv SV --cnv CNV
                            [--out OUT]
 
@@ -102,7 +113,7 @@ see vignette at
     #------- CHORD -------#
 
 
-    $ sigrap chord --help
+    $ sigrap.R chord --help
     usage: sigrap chord [-h] --sample SAMPLE --snv SNV --sv SV [--out OUT]
 
     optional arguments:
@@ -117,7 +128,7 @@ see vignette at
     #------- MutationalPatterns -------#
 
 
-    $ sigrap mutpat --help
+    $ sigrap.R mutpat --help
     usage: sigrap mutpat [-h] --sample SAMPLE --snv SNV --outdir OUTDIR
 
     optional arguments:
