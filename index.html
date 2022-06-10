@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="index.html">sigrap</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -68,16 +68,32 @@
   </div>
 </nav><div class="container template-home">
 <div class="row">
-  <main id="main" class="col-md-9"><div class="section level1">
-<div class="page-header"><h1 id="sigrap">sigrap<a class="anchor" aria-label="anchor" href="#sigrap"></a>
-</h1></div>
-<!-- badges: start -->
-
-<p>Wrappers for somatic mutation signature analysis tools.</p>
+  <main id="main" class="col-md-9"><ul>
+<li>
+<a href="#id_-sigrap" id="toc-id_-sigrap">🎶 sigrap</a>
 <ul>
-<li>See <a href="https://umccr.github.io/sigrap/" class="uri">https://umccr.github.io/sigrap/</a>
+<li><a href="#installation" id="toc-installation">Installation</a></li>
+<li>
+<a href="#main-modules" id="toc-main-modules">Main Modules</a>
+<ul>
+<li><a href="#id_-hrdetect" id="toc-id_-hrdetect">🔍 HRDetect</a></li>
+<li><a href="#id_-chord" id="toc-id_-chord">🎸 CHORD</a></li>
+<li><a href="#id_-mutationalpatterns" id="toc-id_-mutationalpatterns">🐾 MutationalPatterns</a></li>
+</ul>
+</li>
+<li><a href="#id_-cli" id="toc-id_-cli">💻 CLI</a></li>
+</ul>
 </li>
 </ul>
+<!-- README.md is generated from README.Rmd. Please edit that file --><div class="section level1">
+<div class="page-header"><h1 id="id_-sigrap">🎶 sigrap<a class="anchor" aria-label="anchor" href="#id_-sigrap"></a>
+</h1></div>
+<p>Wrappers for somatic mutation signature analysis tools (HRDetect, CHORD, MutationalPatterns).</p>
+<ul>
+<li>Docs: <a href="https://umccr.github.io/sigrap/" class="uri">https://umccr.github.io/sigrap/</a>
+</li>
+</ul>
+<!-- badges: start -->
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
@@ -92,67 +108,98 @@
 <h2 id="main-modules">Main Modules<a class="anchor" aria-label="anchor" href="#main-modules"></a>
 </h2>
 <div class="section level3">
-<h3 id="hrdetect">HRDetect<a class="anchor" aria-label="anchor" href="#hrdetect"></a>
+<h3 id="id_-hrdetect">🔍 HRDetect<a class="anchor" aria-label="anchor" href="#id_-hrdetect"></a>
 </h3>
 <p>Wraps functionality from the <a href="https://github.com/Nik-Zainal-Group/signature.tools.lib" class="external-link">HRDetect</a> framework - see vignette at <a href="https://umccr.github.io/sigrap/articles/hrdetect.html" class="uri">https://umccr.github.io/sigrap/articles/hrdetect.html</a>.</p>
 </div>
 <div class="section level3">
-<h3 id="chord">CHORD<a class="anchor" aria-label="anchor" href="#chord"></a>
+<h3 id="id_-chord">🎸 CHORD<a class="anchor" aria-label="anchor" href="#id_-chord"></a>
 </h3>
 <p>Wraps functionality from <a href="https://github.com/UMCUGenetics/CHORD" class="external-link">CHORD</a> - see vignette at <a href="https://umccr.github.io/sigrap/articles/chord.html" class="uri">https://umccr.github.io/sigrap/articles/chord.html</a>.</p>
 </div>
 <div class="section level3">
-<h3 id="mutationalpatterns">MutationalPatterns<a class="anchor" aria-label="anchor" href="#mutationalpatterns"></a>
+<h3 id="id_-mutationalpatterns">🐾 MutationalPatterns<a class="anchor" aria-label="anchor" href="#id_-mutationalpatterns"></a>
 </h3>
 <p>Wraps functionality from <a href="https://github.com/UMCUGenetics/MutationalPatterns" class="external-link">MutationalPatterns</a> - see vignette at <a href="https://umccr.github.io/sigrap/articles/mutationalpatterns.html" class="uri">https://umccr.github.io/sigrap/articles/mutationalpatterns.html</a>.</p>
 </div>
 </div>
 <div class="section level2">
-<h2 id="cli-v001">CLI (v0.0.1)<a class="anchor" aria-label="anchor" href="#cli-v001"></a>
+<h2 id="id_-cli">💻 CLI<a class="anchor" aria-label="anchor" href="#id_-cli"></a>
 </h2>
-<pre class="text"><code>#------- sigrap -------#
-$ inst/src/sigrap.R --help
-usage: sigrap [-h] {hrdetect,chord,mutpat} ...
-
-positional arguments:
-  {hrdetect,chord,mutpat}
-                        sub-command help
-    hrdetect            hrdetect help
-    chord               chord help
-    mutpat              mutationalpatterns help
-
-#------- hrdetect -------#
-$ inst/src/sigrap.R hrdetect --help
-usage: sigrap hrdetect [-h] --sample SAMPLE --snv SNV --sv SV --cnv CNV
-                     [--out OUT]
-
-optional arguments:
-  --sample SAMPLE  Sample name.
-  --snv SNV        Input SNV (VCF format).
-  --sv SV          Input SV (VCF format).
-  --cnv CNV        Input CNV (TSV format).
-  --out OUT        Output file ['hrdetect.json.gz'].
-
-#------- chord -------#
-$ inst/src/sigrap.R chord --help
-usage: sigrap chord [-h] --sample SAMPLE --snv SNV --sv SV [--out OUT]
-
-optional arguments:
-  --sample SAMPLE  Sample name.
-  --snv SNV        Input SNV (VCF format).
-  --sv SV          Input SV (VCF format).
-  --out OUT        Output file ['chord.json.gz']
-
-#------- mutpat -------#
-$ inst/src/sigrap.R mutpat --help
-usage: sigrap mutpat [-h] --sample SAMPLE --snv SNV --outdir OUTDIR
-
-optional arguments:
-  --sample SAMPLE  Sample name.
-  --snv SNV        Input SNV file (VCF format).
-  --outdir OUTDIR  Output directory to write results to</code></pre>
+<p>A <code>sigrap</code> command line interface is available for convenience.</p>
+<ul>
+<li>If you’re using the conda package, the <code>sigrap.R</code> command will already be set up inside an activated conda environment.</li>
+<li>If you’re <em>not</em> using the conda package, you need to export the <code>sigrap/inst/cli/</code> directory to your <code>PATH</code> in order to use <code>sigrap.R</code>.</li>
+</ul>
+<div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="va">sigrap_cli</span><span class="op">=</span><span class="va">$(</span><span class="ex">Rscript</span> <span class="at">-e</span> <span class="st">'x = system.file("cli", package = "sigrap"); cat(x, "\n")'</span> <span class="kw">|</span> <span class="fu">xargs</span><span class="va">)</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">PATH</span><span class="op">=</span><span class="st">"</span><span class="va">${sigrap_cli}</span><span class="st">:</span><span class="va">${PATH}</span><span class="st">"</span></span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="sc">$</span> sigrap.R <span class="sc">--</span>version</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>sigrap.R <span class="dv">0</span>.<span class="fl">1.0</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="sc">$</span> sigrap.R <span class="sc">--</span>help</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>usage<span class="sc">:</span> sigrap [<span class="sc">-</span>h] [<span class="sc">-</span>v] {hrdetect,chord,mutpat} ...</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>Somatic signature wrappers</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>positional arguments<span class="sc">:</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  {hrdetect,chord,mutpat}</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>                        sub<span class="sc">-</span>command help</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    hrdetect            HRDetect help</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    chord               CHORD help</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    mutpat              MutationalPatterns help</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>optional arguments<span class="sc">:</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>  <span class="sc">-</span>h, <span class="sc">--</span>help            show this help message and exit</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>  <span class="sc">-</span>v, <span class="sc">--</span>version         show program<span class="st">'s version number and exit</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a><span class="st">#------- HRDetect -------#</span></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a><span class="st">$ sigrap.R hrdetect --help</span></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a><span class="st">usage: sigrap hrdetect [-h] --sample SAMPLE --snv SNV --sv SV --cnv CNV</span></span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a><span class="st">                       [--out OUT]</span></span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a><span class="st">optional arguments:</span></span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a><span class="st">  -h, --help       show this help message and exit</span></span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a><span class="st">  --sample SAMPLE  Sample name.</span></span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a><span class="st">  --snv SNV        Input SNV (VCF format).</span></span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a><span class="st">  --sv SV          Input SV (VCF format).</span></span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a><span class="st">  --cnv CNV        Input CNV (TSV format).</span></span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a><span class="st">  --out OUT        Output file ['</span>hrdetect.json.gz<span class="st">'].</span></span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a><span class="st">#------- CHORD -------#</span></span>
+<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a><span class="st">$ sigrap.R chord --help</span></span>
+<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a><span class="st">usage: sigrap chord [-h] --sample SAMPLE --snv SNV --sv SV [--out OUT]</span></span>
+<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a><span class="st">optional arguments:</span></span>
+<span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a><span class="st">  -h, --help       show this help message and exit</span></span>
+<span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a><span class="st">  --sample SAMPLE  Sample name.</span></span>
+<span id="cb4-48"><a href="#cb4-48" aria-hidden="true" tabindex="-1"></a><span class="st">  --snv SNV        Input SNV (VCF format).</span></span>
+<span id="cb4-49"><a href="#cb4-49" aria-hidden="true" tabindex="-1"></a><span class="st">  --sv SV          Input SV (VCF format).</span></span>
+<span id="cb4-50"><a href="#cb4-50" aria-hidden="true" tabindex="-1"></a><span class="st">  --out OUT        Output file ['</span>.<span class="sc">/</span>chord.json.gz<span class="st">']</span></span>
+<span id="cb4-51"><a href="#cb4-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-52"><a href="#cb4-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-53"><a href="#cb4-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-54"><a href="#cb4-54" aria-hidden="true" tabindex="-1"></a><span class="st">#------- MutationalPatterns -------#</span></span>
+<span id="cb4-55"><a href="#cb4-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-56"><a href="#cb4-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-57"><a href="#cb4-57" aria-hidden="true" tabindex="-1"></a><span class="st">$ sigrap.R mutpat --help</span></span>
+<span id="cb4-58"><a href="#cb4-58" aria-hidden="true" tabindex="-1"></a><span class="st">usage: sigrap mutpat [-h] --sample SAMPLE --snv SNV --outdir OUTDIR</span></span>
+<span id="cb4-59"><a href="#cb4-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-60"><a href="#cb4-60" aria-hidden="true" tabindex="-1"></a><span class="st">optional arguments:</span></span>
+<span id="cb4-61"><a href="#cb4-61" aria-hidden="true" tabindex="-1"></a><span class="st">  -h, --help       show this help message and exit</span></span>
+<span id="cb4-62"><a href="#cb4-62" aria-hidden="true" tabindex="-1"></a><span class="st">  --sample SAMPLE  Sample name.</span></span>
+<span id="cb4-63"><a href="#cb4-63" aria-hidden="true" tabindex="-1"></a><span class="st">  --snv SNV        Input SNV file (VCF format).</span></span>
+<span id="cb4-64"><a href="#cb4-64" aria-hidden="true" tabindex="-1"></a><span class="st">  --outdir OUTDIR  Output directory to write results to.</span></span></code></pre></div>
 </div>
 </div>
+
   </main><aside class="col-md-3"><div class="links">
 <h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
