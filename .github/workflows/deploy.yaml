@@ -9,7 +9,7 @@ env:
   recipe_path: conda/recipe
   env_yaml_path: conda/env/yaml
   env_lock_path: conda/env/lock
-  VERSION: '0.0.4' # versioned by bump2version
+  VERSION: '0.1.0' # versioned by bump2version
   GDRIVE_CREDENTIALS_DATA: ${{ secrets.GDRIVE_CREDENTIALS_DATA }}
 
 jobs:
@@ -36,10 +36,8 @@ jobs:
       - name: 🐍 Conda pkg build and upload
         run: |
           conda activate
-          mamba create --name cbuildenv conda-build conda-verify anaconda-client boa dvc dvc-gdrive
+          mamba create --name cbuildenv conda-build conda-verify anaconda-client boa
           conda activate cbuildenv
-          dvc pull
-          ls -l inst/extdata/*
           conda mambabuild --R 4.1 ${recipe_path} --token ${atoken}
       - name: 🔒 Conda lock
         run: |

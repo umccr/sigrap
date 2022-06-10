@@ -75,7 +75,7 @@ sigrap_cli=$(Rscript -e 'x = system.file("cli", package = "sigrap"); cat(x, "\n"
 export PATH="${sigrap_cli}:${PATH}"
 
 echo "$ sigrap.R --version"
-echo "sigrap.R 0.0.4"
+echo "sigrap.R 0.1.0"
 echo ""
 echo "$ sigrap.R --help"
 sigrap.R --help

@@ -1,5 +1,11 @@
 # sigrap dev
 
+# sigrap 0.1.0 (2022-06-10)
+
+- :star: Add Docker support ([pr6](https://github.com/umccr/sigrap/pull/6)).
+- :star: Add conda-lock support ([pr6](https://github.com/umccr/sigrap/pull/6)).
+- :star: Modularise CLI
+
 # sigrap 0.0.4 (2022-06-07)
 
 - :star: Update to `{signature.tools.lib}` v2.1.2
