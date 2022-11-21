@@ -12,7 +12,8 @@
 #' @param sv.caller manta (default) or gridss.
 #' @param outpath File to write CHORD predictions to on disk
 #' (should end in '.gz'). If not specified, results won't be written to disk.
-#' @param ... Other arguments to be passed to [CHORD::extractSigsChord()].
+#' @param ... Other arguments to be passed to
+#'            <https://github.com/UMCUGenetics/CHORD/blob/d7c963/R/extractSigsChord.R>.
 #'
 #' @examples
 #'

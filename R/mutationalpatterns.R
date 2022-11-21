@@ -43,9 +43,9 @@ sig_contribution <- function(mut_mat, signatures) {
       RelFreq = round(.data$contr / sum(.data$contr), 2),
       Rank = as.integer(base::rank(-.data$contr))
     ) |>
-    dplyr::select(.data$Rank,
-      Signature = .data$sig,
-      Contribution = .data$contr, .data$RelFreq
+    dplyr::select("Rank",
+      Signature = "sig",
+      Contribution = "contr", "RelFreq"
     ) |>
     dplyr::arrange(.data$Rank)
 
@@ -98,8 +98,8 @@ sig_contribution_table <- function(contr, type, outdir = NULL) {
       dplyr::mutate(cp = file.copy(from = .data$Plot_original, to = .data$Plot_copy)) |>
       dplyr::mutate(plot_in_md = paste0("![](", .data$Plot_copy, ")")) |>
       dplyr::select(
-        .data$Rank, .data$Signature, .data$Contribution, .data$RelFreq,
-        Description = .data$description, Plot = .data$plot_in_md
+        "Rank", "Signature", "Contribution", "RelFreq",
+        Description = "description", Plot = "plot_in_md"
       )
   } else { # don't copy out any COSMIC plots
     sig_table <-

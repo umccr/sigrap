@@ -34,10 +34,10 @@ hrdetect_read_snvindel_vcf <- function(x) {
 
   snv <- d |>
     dplyr::filter(.data$vartype == "SNV") |>
-    dplyr::select(-.data$vartype)
+    dplyr::select(-"vartype")
   indel <- d |>
     dplyr::filter(.data$vartype == "INDEL") |>
-    dplyr::select(-.data$vartype)
+    dplyr::select(-"vartype")
 
   list(
     snv = snv,
@@ -83,9 +83,9 @@ hrdetect_read_sv_vcf <- function(x, nm = NULL, genome = "hg38") {
     dplyr::mutate_if(is.factor, as.character) |>
     dplyr::mutate(sample = nm) |>
     dplyr::select(
-      .data$chrom1, .data$start1, .data$end1,
-      .data$chrom2, .data$start2, .data$end2,
-      .data$sample, .data$strand1, .data$strand2
+      "chrom1", "start1", "end1",
+      "chrom2", "start2", "end2",
+      "sample", "strand1", "strand2"
     )
 
   bedpe
