@@ -32,7 +32,8 @@ chord_run(
 \item{outpath}{File to write CHORD predictions to on disk
 (should end in '.gz'). If not specified, results won't be written to disk.}
 
-\item{...}{Other arguments to be passed to \code{\link[CHORD:extractSigsChord]{CHORD::extractSigsChord()}}.}
+\item{...}{Other arguments to be passed to
+\url{https://github.com/UMCUGenetics/CHORD/blob/d7c963/R/extractSigsChord.R}.}
 }
 \value{
 List with extracted signatures and HRD prediction.
