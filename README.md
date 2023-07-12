@@ -73,7 +73,7 @@ export PATH="${sigrap_cli}:${PATH}"
 ```
 
     $ sigrap.R --version
-    sigrap.R 0.1.0
+    sigrap.R 0.1.1
 
     $ sigrap.R --help
     usage: sigrap [-h] [-v] {hrdetect,chord,mutpat} ...
