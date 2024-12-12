@@ -72,7 +72,7 @@ export PATH="${sigrap_cli}:${PATH}"
 ```
 
     sigrap.R --version
-    sigrap 0.1.1
+    sigrap 0.1.2
 
     #-----------------------------------#
     sigrap.R --help
