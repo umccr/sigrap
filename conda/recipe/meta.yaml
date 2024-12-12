@@ -31,6 +31,9 @@ requirements:
     - bioconductor-structuralvariantannotation
     - r-tidyr
     - bioconductor-variantannotation
+    - bioconductor-bsgenome.hsapiens.ucsc.hg38
+    - bioconductor-txdb.hsapiens.ucsc.hg38.knowngene
+    - bioconductor-genomeinfodbdata
   run:
     - r-base
     - r-assertthat
@@ -47,6 +50,9 @@ requirements:
     - bioconductor-structuralvariantannotation
     - r-tidyr
     - bioconductor-variantannotation
+    - bioconductor-bsgenome.hsapiens.ucsc.hg38
+    - bioconductor-txdb.hsapiens.ucsc.hg38.knowngene
+    - bioconductor-genomeinfodbdata
 
 test:
   commands:
