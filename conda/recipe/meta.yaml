@@ -1,6 +1,6 @@
 package:
   name: r-sigrap
-  version: 0.1.2 # bump2version
+  version: 0.1.2.1 # bump2version
 
 source:
   path: ../..
