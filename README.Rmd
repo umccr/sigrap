@@ -70,37 +70,22 @@ sigrap_cli=$(Rscript -e 'x = system.file("cli", package = "sigrap"); cat(x, "\n"
 export PATH="${sigrap_cli}:${PATH}"
 ```
 
-```{bash echo=FALSE}
+```{bash prompt=TRUE, echo=FALSE}
 sigrap_cli=$(Rscript -e 'x = system.file("cli", package = "sigrap"); cat(x, "\n")' | xargs)
 export PATH="${sigrap_cli}:${PATH}"
 
-echo "$ sigrap.R --version"
-echo "sigrap.R 0.1.1"
+echo "sigrap.R --version" & sigrap.R --version
 echo ""
-echo "$ sigrap.R --help"
-sigrap.R --help
-echo ""
-echo ""
+echo "#-----------------------------------#"
+echo "sigrap.R --help" & sigrap.R --help
 echo ""
 echo "#------- HRDetect -------#"
-echo ""
-echo ""
-echo "$ sigrap.R hrdetect --help"
-sigrap.R hrdetect --help
-echo ""
-echo ""
+echo "sigrap.R hrdetect --help" & sigrap.R hrdetect --help
 echo ""
 echo "#------- CHORD -------#"
-echo ""
-echo ""
-echo "$ sigrap.R chord --help"
-sigrap.R chord --help
-echo ""
-echo ""
+echo "sigrap.R chord --help" & sigrap.R chord --help
 echo ""
 echo "#------- MutationalPatterns -------#"
 echo ""
-echo ""
-echo "$ sigrap.R mutpat --help"
-sigrap.R mutpat --help
+echo "sigrap.R mutpat --help" & sigrap.R mutpat --help
 ```
