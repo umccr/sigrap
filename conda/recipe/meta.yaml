@@ -16,7 +16,7 @@ requirements:
   build:
     - git
   host:
-    - r-base
+    - r-base ==4.3
     - r-assertthat
     - r-bedr
     - r-chord
@@ -36,7 +36,7 @@ requirements:
     - bioconductor-genomeinfodbdata
     - bioconductor-genomicfeatures
   run:
-    - r-base
+    - r-base ==4.3
     - r-assertthat
     - r-bedr
     - r-chord
