@@ -17,6 +17,7 @@ requirements:
     - git
   host:
     - r-base ==4.3
+    - r-argparse
     - r-assertthat
     - r-bedr
     - r-chord
@@ -38,6 +39,7 @@ requirements:
     - bioconductor-genomicfeatures
   run:
     - r-base ==4.3
+    - r-argparse
     - r-assertthat
     - r-bedr
     - r-chord

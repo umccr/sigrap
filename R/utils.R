@@ -35,3 +35,9 @@ pkg_exists <- function(p) {
   assertthat::assert_that(is.character(p))
   nzchar(system.file(package = p))
 }
+
+#' @noRd
+dummy1 <- function() {
+  # Solves R CMD check: Namespaces in Imports field not imported from
+  argparse::ArgumentParser
+}
