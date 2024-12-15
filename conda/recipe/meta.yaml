@@ -31,10 +31,10 @@ requirements:
     - bioconductor-structuralvariantannotation
     - r-tidyr
     - bioconductor-variantannotation
-    - bioconductor-bsgenome.hsapiens.ucsc.hg38 ==1.4.4
-    - bioconductor-txdb.hsapiens.ucsc.hg38.knowngene ==3.14.0
-    - bioconductor-genomeinfodbdata ==1.2.7
-    - bioconductor-genomicfeatures=1.46.1
+    - bioconductor-bsgenome.hsapiens.ucsc.hg38
+    - bioconductor-txdb.hsapiens.ucsc.hg38.knowngene
+    - bioconductor-genomeinfodbdata
+    - bioconductor-genomicfeatures
   run:
     - r-base
     - r-assertthat
@@ -51,10 +51,10 @@ requirements:
     - bioconductor-structuralvariantannotation
     - r-tidyr
     - bioconductor-variantannotation
-    - bioconductor-bsgenome.hsapiens.ucsc.hg38 ==1.4.4
-    - bioconductor-txdb.hsapiens.ucsc.hg38.knowngene ==3.14.0
-    - bioconductor-genomeinfodbdata ==1.2.7
-    - bioconductor-genomicfeatures=1.46.1
+    - bioconductor-bsgenome.hsapiens.ucsc.hg38
+    - bioconductor-txdb.hsapiens.ucsc.hg38.knowngene
+    - bioconductor-genomeinfodbdata
+    - bioconductor-genomicfeatures
 
 test:
   commands:
