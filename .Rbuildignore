@@ -1,4 +1,4 @@
-^\.bumpversion\.cfg$
+^\.bumpversion\.toml$
 ^data-raw$
 ^docs$
 ^LICENSE\.md$

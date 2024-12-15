@@ -1,6 +1,6 @@
 package:
   name: r-sigrap
-  version: 0.1.2.1 # bump2version
+  version: 0.1.2.5 # bump2version
 
 source:
   path: ../..
@@ -16,45 +16,47 @@ requirements:
   build:
     - git
   host:
-    - r-base
+    - r-base ==4.3
     - r-assertthat
     - r-bedr
     - r-chord
     - r-cli
     - r-dplyr
     - r-dt
+    - r-fs
     - r-ggplot2
-    - r-gpgr
+    - r-jsonlite
     - bioconductor-mutationalpatterns
     - r-readr
     - r-signature.tools.lib
     - bioconductor-structuralvariantannotation
     - r-tidyr
     - bioconductor-variantannotation
-    - bioconductor-bsgenome.hsapiens.ucsc.hg38 ==1.4.4
-    - bioconductor-txdb.hsapiens.ucsc.hg38.knowngene ==3.14.0
-    - bioconductor-genomeinfodbdata ==1.2.7
-    - bioconductor-genomicfeatures=1.46.1
+    - bioconductor-bsgenome.hsapiens.ucsc.hg38
+    - bioconductor-txdb.hsapiens.ucsc.hg38.knowngene
+    - bioconductor-genomeinfodbdata
+    - bioconductor-genomicfeatures
   run:
-    - r-base
+    - r-base ==4.3
     - r-assertthat
     - r-bedr
     - r-chord
     - r-cli
     - r-dplyr
     - r-dt
+    - r-fs
     - r-ggplot2
-    - r-gpgr
+    - r-jsonlite
     - bioconductor-mutationalpatterns
     - r-readr
     - r-signature.tools.lib
     - bioconductor-structuralvariantannotation
     - r-tidyr
     - bioconductor-variantannotation
-    - bioconductor-bsgenome.hsapiens.ucsc.hg38 ==1.4.4
-    - bioconductor-txdb.hsapiens.ucsc.hg38.knowngene ==3.14.0
-    - bioconductor-genomeinfodbdata ==1.2.7
-    - bioconductor-genomicfeatures=1.46.1
+    - bioconductor-bsgenome.hsapiens.ucsc.hg38
+    - bioconductor-txdb.hsapiens.ucsc.hg38.knowngene
+    - bioconductor-genomeinfodbdata
+    - bioconductor-genomicfeatures
 
 test:
   commands:

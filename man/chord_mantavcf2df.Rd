@@ -16,6 +16,8 @@ Tibble with two columns: sv_type and sv_len (INFO/SVTYPE and INFO/SVLEN from VCF
 Converts a Manta VCF to a data.frame for processing with CHORD.
 }
 \examples{
+\dontrun{
 in_vcf <- system.file("extdata/umccrise/sv/manta.vcf.gz", package = "gpgr")
 d <- chord_mantavcf2df(in_vcf)
+}
 }

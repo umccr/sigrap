@@ -16,7 +16,7 @@
 #'            <https://github.com/UMCUGenetics/CHORD/blob/d7c963/R/extractSigsChord.R>.
 #'
 #' @examples
-#'
+#' \dontrun{
 #' snv <- system.file("extdata/umccrise/snv/somatic-ensemble-PASS.vcf.gz", package = "gpgr")
 #' sv <- system.file("extdata/umccrise/sv/manta.vcf.gz", package = "gpgr")
 #' chord_res <- chord_run(
@@ -25,13 +25,7 @@
 #' )
 #' # chord_res2 <- chord_run(vcf.snv = snv, vcf.sv = sv, sample.name = "foo",
 #' #                         outpath = "nogit/chord_results.json.gz")
-#' @testexamples
-#'
-#' expect_equal(length(chord_res), 2)
-#' expect_equal(names(chord_res), c("contexts", "prediction"))
-#' expect_equal(chord_res[["prediction"]][, 1, drop = TRUE], "foo")
-#'
-#'
+#' }
 #' @return List with extracted signatures and HRD prediction.
 #'
 #' @export
@@ -75,7 +69,7 @@ chord_run <- function(vcf.snv = NULL, vcf.sv = NULL, df.sv = NULL,
 
   # write json.gz to file
   if (!is.null(outpath)) {
-    gpgr::write_jsongz(x = prediction, path = outpath)
+    write_jsongz(x = prediction, path = outpath)
   }
 
   list(
@@ -93,12 +87,10 @@ chord_run <- function(vcf.snv = NULL, vcf.sv = NULL, df.sv = NULL,
 #' @return Tibble with two columns: sv_type and sv_len (INFO/SVTYPE and INFO/SVLEN from VCF).
 #'
 #' @examples
+#' \dontrun{
 #' in_vcf <- system.file("extdata/umccrise/sv/manta.vcf.gz", package = "gpgr")
 #' d <- chord_mantavcf2df(in_vcf)
-#' @testexamples
-#' expect_equal(d$sv_len[1], "-108")
-#' expect_equal(d$sv_type[1], "DEL")
-#'
+#' }
 #' @export
 chord_mantavcf2df <- function(in_vcf) {
   assertthat::assert_that(file.exists(in_vcf))
@@ -140,7 +132,7 @@ get_genome_obj <- function(genome = "hg38") {
       "{paste(names(bsgenome), collapse = ', ')}"
     )
   )
-  if (!gpgr::pkg_exists(pkg)) {
+  if (!pkg_exists(pkg)) {
     stop(glue::glue(
       "{pkg} is not installed on your system.\n",
       "Please install with:\n'BiocManager::install(\"{pkg}\")'"

@@ -20,7 +20,9 @@ Single-column data.frame (with rownames) with counts for each SV category.
 Prepares VCF with SVs for use with HRDetect.
 }
 \examples{
+\dontrun{
 x <- system.file("extdata/umccrise/sv/manta.vcf.gz", package = "gpgr")
 nm <- "SampleA"
 (d <- hrdetect_prep_sv(x, nm))
+}
 }

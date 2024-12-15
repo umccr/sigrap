@@ -26,7 +26,9 @@ Tibble with following BEDPE-like columns:
 Reads a VCF with SVs for use with HRDetect.
 }
 \examples{
+\dontrun{
 x <- system.file("extdata/umccrise/sv/manta.vcf.gz", package = "gpgr")
 sv_bedpe <- hrdetect_read_sv_vcf(x, nm = "SAMPLE")
 head(sv_bedpe)
+}
 }

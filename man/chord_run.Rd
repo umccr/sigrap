@@ -43,7 +43,7 @@ Runs CHORD given SNV and SV VCF files. \strong{NOTE}: make sure you have
 the BSgenome.Hsapiens.UCSC.hgXX installed.
 }
 \examples{
-
+\dontrun{
 snv <- system.file("extdata/umccrise/snv/somatic-ensemble-PASS.vcf.gz", package = "gpgr")
 sv <- system.file("extdata/umccrise/sv/manta.vcf.gz", package = "gpgr")
 chord_res <- chord_run(
@@ -52,4 +52,5 @@ chord_res <- chord_run(
 )
 # chord_res2 <- chord_run(vcf.snv = snv, vcf.sv = sv, sample.name = "foo",
 #                         outpath = "nogit/chord_results.json.gz")
+}
 }
