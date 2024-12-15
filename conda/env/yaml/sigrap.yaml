@@ -6,4 +6,4 @@ channels:
   - bioconda
 
 dependencies:
-  - r-sigrap ==0.1.2.2 # bump
+  - r-sigrap ==0.1.2.3 # bump
