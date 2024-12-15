@@ -8,14 +8,10 @@
 #'         for SNVs and INDELs in separate tibbles.
 #'
 #' @examples
+#' \dontrun{
 #' x <- system.file("extdata/umccrise/snv/somatic-ensemble-PASS.vcf.gz", package = "gpgr")
 #' (l <- hrdetect_read_snvindel_vcf(x))
-#' @testexamples
-#' expect_equal(length(l), 2)
-#' expect_equal(names(l), c("snv", "indel"))
-#' expect_equal(colnames(l$snv), c("chr", "position", "REF", "ALT"))
-#' expect_equal(colnames(l$indel), c("chr", "position", "REF", "ALT"))
-#'
+#' }
 #' @export
 hrdetect_read_snvindel_vcf <- function(x) {
   assertthat::assert_that(file.exists(x))
@@ -61,13 +57,11 @@ hrdetect_read_snvindel_vcf <- function(x) {
 #'
 #'
 #' @examples
+#' \dontrun{
 #' x <- system.file("extdata/umccrise/sv/manta.vcf.gz", package = "gpgr")
 #' sv_bedpe <- hrdetect_read_sv_vcf(x, nm = "SAMPLE")
 #' head(sv_bedpe)
-#' @testexamples
-#' expect_equal(nrow(sv_bedpe), 190)
-#' expect_equal(colnames(sv_bedpe), c("chrom1", "start1", "end1", "chrom2",
-#'              "start2", "end2", "sample", "strand1", "strand2"))
+#' }
 #' @export
 hrdetect_read_sv_vcf <- function(x, nm = NULL, genome = "hg38") {
   assertthat::assert_that(file.exists(x))
@@ -103,13 +97,10 @@ hrdetect_read_sv_vcf <- function(x, nm = NULL, genome = "hg38") {
 #' - minorAllelePloidy
 #'
 #' @examples
+#' \dontrun{
 #' x <- system.file("extdata/purple/purple.cnv.somatic.tsv", package = "gpgr")
 #' (cnv <- hrdetect_read_purple_cnv(x))
-#' @testexamples
-#' expect_equal(colnames(cnv), c("Chromosome", "chromStart", "chromEnd",
-#'                               "total.copy.number.inTumour",
-#'                               "minor.copy.number.inTumour"))
-#'
+#' }
 #' @export
 hrdetect_read_purple_cnv <- function(x) {
   assertthat::assert_that(file.exists(x))
@@ -143,12 +134,10 @@ hrdetect_read_purple_cnv <- function(x) {
 #' - indel_results: tibble with a summary of the count of indels and their proportion.
 #'
 #' @examples
+#' \dontrun{
 #' x <- system.file("extdata/umccrise/snv/somatic-ensemble-PASS.vcf.gz", package = "gpgr")
 #' (l <- hrdetect_prep_snvindel(x, nm = "sampleA"))
-#' @testexamples
-#' expect_equal(c("snv_results", "indel_results"), names(l))
-#' expect_equal(c("sig", "exposure"), colnames(l[["snv_results"]]))
-#' expect_equal(colnames(l[["indel_results"]])[c(1, 7)], c("sample", "del.mh.prop"))
+#' }
 #'
 #' @export
 hrdetect_prep_snvindel <- function(x, nm = NULL, genome = "hg38",
@@ -219,13 +208,11 @@ hrdetect_prep_snvindel <- function(x, nm = NULL, genome = "hg38",
 #' @return Single-column data.frame (with rownames) with counts for each SV category.
 #'
 #' @examples
+#' \dontrun{
 #' x <- system.file("extdata/umccrise/sv/manta.vcf.gz", package = "gpgr")
 #' nm <- "SampleA"
 #' (d <- hrdetect_prep_sv(x, nm))
-#' @testexamples
-#' expect_equal(colnames(d), nm)
-#' expect_true(inherits(d, "data.frame"))
-#'
+#' }
 #' @export
 hrdetect_prep_sv <- function(x, nm = NULL, genome = "hg38") {
   assertthat::assert_that(file.exists(x))
@@ -248,12 +235,10 @@ hrdetect_prep_sv <- function(x, nm = NULL, genome = "hg38") {
 #' @return Tibble with sample name and HRD-LOH index.
 #'
 #' @examples
+#' \dontrun{
 #' x <- system.file("extdata/purple/purple.cnv.somatic.tsv", package = "gpgr")
 #' (l <- hrdetect_prep_cnv(x, nm = "SampleA"))
-#' @testexamples
-#' expect_equal(colnames(l), c("name", "hrdloh_index"))
-#' expect_equal(nrow(l), 1)
-#'
+#' }
 #' @export
 hrdetect_prep_cnv <- function(x, nm = NULL) {
   assertthat::assert_that(file.exists(x))
@@ -283,6 +268,7 @@ hrdetect_prep_cnv <- function(x, nm = NULL) {
 #' @return Tibble with sample name and HRD probability in first two columns.
 #'
 #' @examples
+#' \dontrun{
 #' snvindel_vcf <- system.file(
 #'   "extdata/umccrise/snv/somatic-ensemble-PASS.vcf.gz",
 #'   package = "gpgr"
@@ -294,11 +280,7 @@ hrdetect_prep_cnv <- function(x, nm = NULL) {
 #' (res <- hrdetect_run(nm, snvindel_vcf, sv_vcf, cnv_tsv, genome))
 #' # hrdetect_run(nm, snvindel_vcf, sv_vcf, cnv_tsv, genome,
 #' #              outpath = "nogit/hrdetect_results.json.gz")
-#' @testexamples
-#' expect_equal(colnames(res), c("sample", "Probability", "intercept", "del.mh.prop", "SNV3",
-#'                               "SV3", "SV5", "hrdloh_index", "SNV8"))
-#' expect_true(inherits(res, "data.frame"))
-#'
+#' }
 #' @export
 hrdetect_run <- function(nm, snvindel_vcf, sv_vcf, cnv_tsv, genome = "hg38",
                          sigsToUse = c(1, 2, 3, 5, 6, 8, 13, 17, 18, 20, 26, 30),
@@ -358,7 +340,7 @@ hrdetect_run <- function(nm, snvindel_vcf, sv_vcf, cnv_tsv, genome = "hg38",
 
   # write json.gz to file
   if (!is.null(outpath)) {
-    gpgr::write_jsongz(x = res, path = outpath)
+    write_jsongz(x = res, path = outpath)
   }
 
   res

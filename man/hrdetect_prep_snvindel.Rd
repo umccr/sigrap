@@ -31,6 +31,9 @@ List with two elements:
 Prepares VCF with SNVs/INDELs for use with HRDetect.
 }
 \examples{
+\dontrun{
 x <- system.file("extdata/umccrise/snv/somatic-ensemble-PASS.vcf.gz", package = "gpgr")
 (l <- hrdetect_prep_snvindel(x, nm = "sampleA"))
+}
+
 }

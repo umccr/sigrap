@@ -18,6 +18,8 @@ Tibble with sample name and HRD-LOH index.
 Prepares PURPLE somatic CNVs for use with HRDetect.
 }
 \examples{
+\dontrun{
 x <- system.file("extdata/purple/purple.cnv.somatic.tsv", package = "gpgr")
 (l <- hrdetect_prep_cnv(x, nm = "SampleA"))
+}
 }

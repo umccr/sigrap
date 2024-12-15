@@ -38,6 +38,7 @@ Runs HRDetect as described in the
 \href{https://github.com/Nik-Zainal-Group/signature.tools.lib}{signature.tools.lib repository}.
 }
 \examples{
+\dontrun{
 snvindel_vcf <- system.file(
   "extdata/umccrise/snv/somatic-ensemble-PASS.vcf.gz",
   package = "gpgr"
@@ -49,4 +50,5 @@ genome <- "hg38"
 (res <- hrdetect_run(nm, snvindel_vcf, sv_vcf, cnv_tsv, genome))
 # hrdetect_run(nm, snvindel_vcf, sv_vcf, cnv_tsv, genome,
 #              outpath = "nogit/hrdetect_results.json.gz")
+}
 }

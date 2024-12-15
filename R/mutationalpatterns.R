@@ -82,7 +82,7 @@ sig_contribution_table <- function(contr, type, outdir = NULL) {
   # if an outdir is specified, copy out the COSMIC plots to be linked to
   if (!is.null(outdir)) {
     img_cp_dir <- file.path(outdir, "sig_plots", type)
-    gpgr::mkdir(img_cp_dir)
+    fs::dir_create(img_cp_dir)
     sig_table <-
       readr::read_tsv(file = file.path(sig_dir, "description.tsv"), col_types = "cc") |>
       dplyr::mutate(
@@ -276,14 +276,14 @@ sig_plot_dbs <- function(dbs_counts) {
 #'
 #' @export
 sig_workflow_run <- function(vcf, sample_nm, ref_genome = "hg38", outdir) {
-  gpgr::mkdir(outdir)
+  fs::dir_create(outdir)
   outdir <- normalizePath(outdir)
   ref_genome <- get_genome_obj(ref_genome)
 
   save_plot_list <- function(pl, outdir) {
     assertthat::assert_that(is.list(pl), length(pl) > 0)
     assertthat::assert_that(all(sapply(pl, inherits, "ggplot")))
-    gpgr::mkdir(outdir)
+    fs::dir_create(outdir)
     for (i in seq_len(length(pl))) {
       nm <- names(pl)[i]
       fn <- file.path(outdir, paste0(nm, ".png"))
@@ -292,7 +292,7 @@ sig_workflow_run <- function(vcf, sample_nm, ref_genome = "hg38", outdir) {
     }
   }
 
-  cli::cli_h2(glue::glue("{gpgr::date_log()} Start of MutationalPatterns workflow"))
+  cli::cli_h2(glue::glue("{date_log()} Start of MutationalPatterns workflow"))
   # import VCF
   gr <- MutationalPatterns::read_vcfs_as_granges(
     vcf_files = vcf,
@@ -355,14 +355,13 @@ sig_workflow_run <- function(vcf, sample_nm, ref_genome = "hg38", outdir) {
     }() |>
     sigrap::sig_contribution_table(type = "ID")
 
-  cli::cli_h2(glue::glue("{gpgr::date_log()} Saving MutationalPatterns results to\n'{outdir}'"))
+  cli::cli_h2(glue::glue("{date_log()} Saving MutationalPatterns results to\n'{outdir}'"))
   save_plot_list(p_snv, file.path(outdir, "plot/snv"))
   save_plot_list(p_dbs, file.path(outdir, "plot/dbs"))
   save_plot_list(p_indel, file.path(outdir, "plot/indel"))
-  gpgr::write_jsongz(x = sigs_snv_2015, path = file.path(outdir, "sigs/snv2015.json.gz"))
-  gpgr::write_jsongz(x = sigs_snv_2020, path = file.path(outdir, "sigs/snv2020.json.gz"))
-  gpgr::write_jsongz(x = sigs_dbs, path = file.path(outdir, "sigs/dbs.json.gz"))
-  gpgr::write_jsongz(x = sigs_indel, path = file.path(outdir, "sigs/indel.json.gz"))
-
-  cli::cli_h2(glue::glue("{gpgr::date_log()} End of MutationalPatterns workflow"))
+  write_jsongz(x = sigs_snv_2015, path = file.path(outdir, "sigs/snv2015.json.gz"))
+  write_jsongz(x = sigs_snv_2020, path = file.path(outdir, "sigs/snv2020.json.gz"))
+  write_jsongz(x = sigs_dbs, path = file.path(outdir, "sigs/dbs.json.gz"))
+  write_jsongz(x = sigs_indel, path = file.path(outdir, "sigs/indel.json.gz"))
+  cli::cli_h2(glue::glue("{date_log()} End of MutationalPatterns workflow"))
 }

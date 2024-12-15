@@ -14,7 +14,6 @@ License: MIT + file LICENSE
 Depends:
     R (>= 4.1)
 Remotes:
-    umccr/gpgr,
     umccr/signature.tools.lib,
     UMCUGenetics/CHORD
 Imports:
@@ -23,8 +22,9 @@ Imports:
     cli,
     CHORD,
     dplyr,
+    fs,
     ggplot2,
-    gpgr (>= 1.0.0),
+    jsonlite,
     MutationalPatterns,
     readr,
     rlang,
@@ -55,5 +55,5 @@ ByteCompile: true
 Config/testthat/edition: 3
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.1
 VignetteBuilder: knitr
