@@ -8,6 +8,8 @@ chord_add_args <- function(subp) {
 
 chord_parse_args <- function(args) {
   cli::cli_h1("Started running CHORD!")
+  # CHORD requires this to be loaded...
+  suppressPackageStartupMessages(library("BSgenome.Hsapiens.UCSC.hg38"))
   res <- sigrap::chord_run(
     vcf.snv = args$snv, vcf.sv = args$sv,
     sample.name = args$sample, outpath = args$out
