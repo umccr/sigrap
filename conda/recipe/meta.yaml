@@ -20,7 +20,7 @@ requirements:
     - r-argparse
     - r-assertthat
     - r-bedr
-    - r-chord
+    - umccr::r-chord
     - r-cli
     - r-dplyr
     - r-dt
@@ -29,7 +29,7 @@ requirements:
     - r-jsonlite
     - bioconductor-mutationalpatterns
     - r-readr
-    - r-signature.tools.lib
+    - umccr::r-signature.tools.lib
     - bioconductor-structuralvariantannotation
     - r-tidyr
     - bioconductor-variantannotation
@@ -42,7 +42,7 @@ requirements:
     - r-argparse
     - r-assertthat
     - r-bedr
-    - r-chord
+    - umccr::r-chord
     - r-cli
     - r-dplyr
     - r-dt
@@ -51,7 +51,7 @@ requirements:
     - r-jsonlite
     - bioconductor-mutationalpatterns
     - r-readr
-    - r-signature.tools.lib
+    - umccr::r-signature.tools.lib
     - bioconductor-structuralvariantannotation
     - r-tidyr
     - bioconductor-variantannotation
