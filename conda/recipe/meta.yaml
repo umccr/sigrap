@@ -1,6 +1,6 @@
 package:
   name: r-sigrap
-  version: 0.1.2.5 # bump2version
+  version: 0.1.2.7 # bump2version
 
 source:
   path: ../..
@@ -17,9 +17,10 @@ requirements:
     - git
   host:
     - r-base ==4.3
+    - r-argparse
     - r-assertthat
     - r-bedr
-    - r-chord
+    - umccr::r-chord
     - r-cli
     - r-dplyr
     - r-dt
@@ -28,7 +29,7 @@ requirements:
     - r-jsonlite
     - bioconductor-mutationalpatterns
     - r-readr
-    - r-signature.tools.lib
+    - umccr::r-signature.tools.lib
     - bioconductor-structuralvariantannotation
     - r-tidyr
     - bioconductor-variantannotation
@@ -38,9 +39,10 @@ requirements:
     - bioconductor-genomicfeatures
   run:
     - r-base ==4.3
+    - r-argparse
     - r-assertthat
     - r-bedr
-    - r-chord
+    - umccr::r-chord
     - r-cli
     - r-dplyr
     - r-dt
@@ -49,7 +51,7 @@ requirements:
     - r-jsonlite
     - bioconductor-mutationalpatterns
     - r-readr
-    - r-signature.tools.lib
+    - umccr::r-signature.tools.lib
     - bioconductor-structuralvariantannotation
     - r-tidyr
     - bioconductor-variantannotation

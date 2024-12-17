@@ -1,32 +1,40 @@
 FROM ubuntu:20.04
-LABEL maintainer="https://github.com/pdiakumis"
+ARG MINIF="miniforge"
+ARG MINIF_VERSION="24.11.0-1"
+ARG MINIF_URL="https://github.com/conda-forge/${MINIF}/releases/download/${MINIF_VERSION}/Miniforge3-${MINIF_VERSION}-Linux-x86_64.sh"
 
-ARG MINI_VERSION=4.12.0-0
-ARG MINI_URL=https://github.com/conda-forge/miniforge/releases/download/${MINI_VERSION}/Mambaforge-${MINI_VERSION}-Linux-x86_64.sh
-ARG MAMBA_PREFIX="/opt/mambaforge"
-
-# install core pkgs, mambaforge
-RUN apt-get update -qq && \
-    apt-get install --yes --no-install-recommends -qq \
-    git bash bzip2 curl ca-certificates && \
+# install core pkgs, miniforge
+RUN apt-get update && \
+    apt-get install --yes --no-install-recommends \
+    bash bzip2 curl less wget zip ca-certificates && \
     apt-get clean && \
-    rm -r /var/lib/apt/lists/* && \
-    rm -r /var/cache/apt/* && \
-    curl --silent -L "${MINI_URL}" -o "mambaforge.sh" && \
-    /bin/bash mambaforge.sh -b -p "${MAMBA_PREFIX}" && \
-    rm mambaforge.sh
+    curl --silent -L "${MINIF_URL}" -o "${MINIF}.sh" && \
+    /bin/bash "${MINIF}.sh" -b -p "/opt/${MINIF}/" && \
+    rm "${MINIF}.sh"
 
 # create conda env
-ENV PATH="${MAMBA_PREFIX}/bin:$PATH"
-ARG ENV_DIR=/home/sigrap_conda_env
-ARG ENV_NAME="sigrap_env"
-COPY ./conda/env/lock ${ENV_DIR}
-RUN conda config --set always_yes yes && \
-    mamba install -c conda-forge conda-lock==1.0.5
-RUN conda-lock install --name ${ENV_NAME} ${ENV_DIR}/conda-lock.yml && \
-    mamba clean --all --force-pkgs-dirs
+ENV PATH="/opt/${MINIF}/bin:$PATH"
+ARG CONDA_ENV_DIR="/home/conda_envs"
+ARG PKG_LOCK="sigrap-linux-64.lock"
+COPY "./conda/env/lock/${PKG_LOCK}" "${CONDA_ENV_DIR}/"
+RUN conda create -n "sigrap_env" --file "${CONDA_ENV_DIR}/${PKG_LOCK}"
+RUN conda clean --all --force-pkgs-dirs --yes
 
-ENV PATH="${MAMBA_PREFIX}/envs/${ENV_NAME}/bin:${PATH}"
-ENV CONDA_PREFIX="${MAMBA_PREFIX}/envs/${ENV_NAME}"
+# Now copy env to smaller image
+FROM quay.io/bioconda/base-glibc-debian-bash:3.1
+LABEL org.opencontainers.image.authors="peterdiakumis@gmail.com" \
+      org.opencontainers.image.description="Wrappers for somatic mutation signature analysis tools" \
+      org.opencontainers.image.source="https://github.com/umccr/sigrap" \
+      org.opencontainers.image.url="https://github.com/umccr/sigrap" \
+      org.opencontainers.image.documentation="https://umccr.github.io/sigrap" \
+      org.opencontainers.image.licenses="MIT"
+
+COPY --from=0 "/opt/miniforge/envs/" "/opt/miniforge/envs/"
+
+# env is activated by default
+ARG MINIF="miniforge"
+ARG CONDA_ENV_NAME="sigrap_env"
+ENV PATH="/opt/${MINIF}/envs/${CONDA_ENV_NAME}/bin:${PATH}"
+ENV CONDA_PREFIX="/opt/${MINIF}/envs/${CONDA_ENV_NAME}"
 
 CMD [ "sigrap.R" ]

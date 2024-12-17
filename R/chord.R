@@ -51,7 +51,7 @@ chord_run <- function(vcf.snv = NULL, vcf.sv = NULL, df.sv = NULL,
       do.bootstrap = TRUE, verbose = FALSE
     ) |>
     dplyr::mutate(
-      dplyr::across(tidyselect::vars_select_helpers$where(is.numeric), round, 3)
+      dplyr::across(dplyr::where(is.numeric), \(x) round(x, 3))
     )
 
   # custom order of prediction cols
