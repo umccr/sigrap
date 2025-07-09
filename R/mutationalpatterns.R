@@ -152,9 +152,11 @@ sig_count_snv <- function(vcf_gr, ref_genome) {
 #'   This is especially usefull when looking at a wide mutational context.
 #' - p_96_profile: relative contribution of 96 trinucleotides.
 #' - p_spectrum: point mutation spectrum.
+#' - p_rainfall: a rainfall plot showing intermutational distances (if rainfall = TRUE).
 #'
 #' @export
-sig_plot_snv <- function(gr_snv, snv_counts, ref_genome) {
+sig_plot_snv <- function(gr_snv, snv_counts, ref_genome, rainfall = FALSE) {
+  
   mut_to <- MutationalPatterns::mut_type_occurrences(
     vcf_list = gr_snv, ref_genome = ref_genome
   )
@@ -173,13 +175,23 @@ sig_plot_snv <- function(gr_snv, snv_counts, ref_genome) {
     ggplot2::theme(legend.position = "none")
   p_river <- MutationalPatterns::plot_river(mut_matrix = mut_mat_ext_context) +
     ggplot2::theme(legend.position = "none")
+  
+  if (rainfall) {
+    p_rainfall <- sigrap::sig_plot_rainfall(vcf_gr = gr_snv, ref_genome = ref_genome)
+  }
 
-  list(
+  result <- list(
     p_heatmap = p_heatmap,
     p_river = p_river,
     p_96_profile = p_96_profile,
     p_spectrum = p_spectrum
   )
+  
+  if (rainfall) {
+    result$p_rainfall <- p_rainfall
+  }
+  
+  return(result)
 }
 
 #' Count INDEL Contexts
@@ -274,9 +286,11 @@ sig_plot_dbs <- function(dbs_counts) {
 #' @param sample_nm Sample name.
 #' @param ref_genome Human genome assembly string: hg38 (default), hg19 or GRCh37.
 #' @param outdir Directory path to output all the results to.
+#' @param rainfall Logical. Whether to generate rainfall plot. Default is FALSE.
+#' @param strand_bias Logical. Whether to generate strand bias analysis. Default is FALSE.
 #'
 #' @export
-sig_workflow_run <- function(vcf, sample_nm, ref_genome = "hg38", outdir) {
+sig_workflow_run <- function(vcf, sample_nm, ref_genome = "hg38", outdir, rainfall = FALSE, strand_bias = FALSE) {
   fs::dir_create(outdir)
   outdir <- normalizePath(outdir)
   ref_genome <- get_genome_obj(ref_genome)
@@ -308,8 +322,12 @@ sig_workflow_run <- function(vcf, sample_nm, ref_genome = "hg38", outdir) {
   snv_counts <- sigrap::sig_count_snv(vcf_gr = gr, ref_genome = ref_genome)
   p_snv <- sigrap::sig_plot_snv(
     gr_snv = snv_counts$gr_snv, snv_counts = snv_counts$snv_counts,
-    ref_genome = ref_genome
+    ref_genome = ref_genome, rainfall = rainfall
   )
+
+  if (strand_bias) {
+    p_strand <- sigrap::sig_plot_strand_bias(vcf_gr = gr, ref_genome = ref_genome)
+  }
 
   # signature contributions (2015)
   sigs_snv_2015 <-
@@ -365,4 +383,49 @@ sig_workflow_run <- function(vcf, sample_nm, ref_genome = "hg38", outdir) {
   write_jsongz(x = sigs_dbs, path = file.path(outdir, "sigs/dbs.json.gz"))
   write_jsongz(x = sigs_indel, path = file.path(outdir, "sigs/indel.json.gz"))
   cli::cli_h2(glue::glue("{date_log()} End of MutationalPatterns workflow"))
+}
+
+#' Plot Rainfall Plot
+#'
+#' Generates a rainfall plot showing intermutational distances.
+#'
+#' @param vcf_gr GRanges containing all mutation types from a single sample.
+#' @param ref_genome The BSGenome reference genome to use.
+#'
+#' @return A ggplot2 object representing the rainfall plot, or an informative 
+#' placeholder plot if the rainfall plot cannot be generated.
+#'
+#' @export
+sig_plot_rainfall <- function(vcf_gr, ref_genome) {
+  gr_snv_rainfall <- MutationalPatterns::get_mut_type(vcf_gr, type = "snv")
+  
+  # When there is only 1 or lower number of variants on a chromosome,
+  # MutationalPatterns::plot_rainfall will crash with an error. So need to check if it will work beforehand.
+  chromosomes <- GenomeInfoDb::seqnames(ref_genome)[1:22]
+  vcf <- gr_snv_rainfall[[1]]
+  will_work <- FALSE
+  for (i in 1:length(chromosomes)) {
+    chr_subset <- vcf[GenomeInfoDb::seqnames(vcf) == chromosomes[i]]
+    n <- length(chr_subset)
+    if (n >= 2) {
+      will_work <- TRUE
+      break
+    }
+  }
+  if (will_work) {
+    p_rainfall <- MutationalPatterns::plot_rainfall(vcf,
+      chromosomes = GenomeInfoDb::seqnames(ref_genome)[1:22],
+      cex = 1.2, ylim = 1e+09
+    )
+  } else {
+    # Create a placeholder when insufficient data
+    p_rainfall <- ggplot2::ggplot() +
+      ggplot2::annotate("text", x = 0.5, y = 0.5, 
+                       label = "Insufficient variants for rainfall plot\n(need ≥2 variants per chromosome)",
+                       hjust = 0.5, vjust = 0.5, size = 4) +
+      ggplot2::theme_void() +
+      ggplot2::labs(title = paste("Rainfall Plot -", names(gr_snv_rainfall)[1]))
+  }
+  
+  return(p_rainfall)
 }
