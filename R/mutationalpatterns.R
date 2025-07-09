@@ -143,7 +143,7 @@ sig_count_snv <- function(vcf_gr, ref_genome) {
 #' @param gr_snv GRanges containing SNVs from a single sample.
 #' @param snv_counts A matrix with counts of SNV contexts.
 #' @param ref_genome The BSGenome reference genome to use.
-#' @param rainfall Logical. Whether to generate rainfall plot. Default is TRUE.
+#' @param rainfall Logical. Whether to generate rainfall plot. Default is FALSE.
 #'
 #' @return A list with up to five ggplot2 objects:
 #' - p_heatmap: a SNV mutation matrix as a heatmap.
@@ -376,6 +376,9 @@ sig_workflow_run <- function(vcf, sample_nm, ref_genome = "hg38", outdir, rainfa
 
   cli::cli_h2(glue::glue("{date_log()} Saving MutationalPatterns results to\n'{outdir}'"))
   save_plot_list(p_snv, file.path(outdir, "plot/snv"))
+  if (strand_bias) {
+    save_plot_list(p_strand, file.path(outdir, "plot/strand"))
+  }
   save_plot_list(p_dbs, file.path(outdir, "plot/dbs"))
   save_plot_list(p_indel, file.path(outdir, "plot/indel"))
   write_jsongz(x = sigs_snv_2015, path = file.path(outdir, "sigs/snv2015.json.gz"))
@@ -383,6 +386,78 @@ sig_workflow_run <- function(vcf, sample_nm, ref_genome = "hg38", outdir, rainfa
   write_jsongz(x = sigs_dbs, path = file.path(outdir, "sigs/dbs.json.gz"))
   write_jsongz(x = sigs_indel, path = file.path(outdir, "sigs/indel.json.gz"))
   cli::cli_h2(glue::glue("{date_log()} End of MutationalPatterns workflow"))
+}
+
+#' Plot Strand Bias Analysis
+#'
+#' Plots transcriptional and replicative strand bias analysis.
+#'
+#' @param vcf_gr GRanges containing all mutation types from a single sample.
+#' @param ref_genome The BSGenome reference genome to use.
+#'
+#' @return A list with four ggplot2 objects:
+#' - p_transcriptional_bias: transcriptional strand bias plot
+#' - p_transcriptional_effect: transcriptional strand bias effect size
+#' - p_replicative_bias: replicative strand bias plot  
+#' - p_replicative_effect: replicative strand bias effect size
+#'
+#' @export
+sig_plot_strand_bias <- function(vcf_gr, ref_genome) {
+  mutpat_gr_snv <- MutationalPatterns::get_mut_type(vcf_gr, type = "snv")
+  
+  ## ---- Transcriptional ---- ##
+  # Only support hg38 for strand bias analysis
+  if (!requireNamespace("TxDb.Hsapiens.UCSC.hg38.knownGene", quietly = TRUE)) {
+    stop("TxDb.Hsapiens.UCSC.hg38.knownGene package not available. ",
+         "Install with: BiocManager::install('TxDb.Hsapiens.UCSC.hg38.knownGene')")
+  }
+  
+  library("TxDb.Hsapiens.UCSC.hg38.knownGene", character.only = TRUE)
+  genes_list <- GenomicFeatures::genes(TxDb.Hsapiens.UCSC.hg38.knownGene)
+  
+  # Transcriptional strand bias
+  mut_mat_s <- MutationalPatterns::mut_matrix_stranded(
+    vcf_list = mutpat_gr_snv, ref_genome = ref_genome, 
+    ranges = genes_list, mode = "transcription"
+  )
+  strand_counts <- MutationalPatterns::strand_occurrences(mut_mat_s, by = "all")
+  strand_bias <- MutationalPatterns::strand_bias_test(strand_counts)
+  
+  p_transcriptional_bias <- MutationalPatterns::plot_strand(strand_counts, mode = "relative") +
+    ggplot2::ggtitle("Transcriptional Strand Bias")
+  p_transcriptional_effect <- MutationalPatterns::plot_strand_bias(strand_bias) +
+    ggplot2::ggtitle("Transcriptional Bias Effect Size")
+  
+  ## ---- Replicative ---- ##
+  repli_file <- system.file("extdata/ReplicationDirectionRegions.bed", package = "MutationalPatterns")
+  repli_strand <- readr::read_tsv(repli_file, col_names = TRUE, col_types = "cddcc") |>
+    dplyr::mutate_if(is.character, as.factor)
+  
+  repli_strand_granges <- GenomicRanges::GRanges(
+    seqnames = repli_strand$Chr,
+    ranges = IRanges::IRanges(start = repli_strand$Start + 1, end = repli_strand$Stop),
+    strand_info = repli_strand$Class
+  )
+  GenomeInfoDb::seqlevelsStyle(repli_strand_granges) <- GenomeInfoDb::seqlevelsStyle(ref_genome)
+  
+  mut_mat_s_rep <- MutationalPatterns::mut_matrix_stranded(
+    vcf_list = mutpat_gr_snv, ref_genome = ref_genome, 
+    ranges = repli_strand_granges, mode = "replication"
+  )
+  strand_counts_rep <- MutationalPatterns::strand_occurrences(mut_mat_s_rep, by = "all")
+  strand_bias_rep <- MutationalPatterns::strand_bias_test(strand_counts_rep)
+  
+  p_replicative_bias <- MutationalPatterns::plot_strand(strand_counts_rep, mode = "relative") +
+    ggplot2::ggtitle("Replicative Strand Bias")
+  p_replicative_effect <- MutationalPatterns::plot_strand_bias(strand_bias_rep) +
+    ggplot2::ggtitle("Replicative Bias Effect Size")
+  
+  list(
+    p_transcriptional_bias = p_transcriptional_bias,
+    p_transcriptional_effect = p_transcriptional_effect,
+    p_replicative_bias = p_replicative_bias,
+    p_replicative_effect = p_replicative_effect
+  )
 }
 
 #' Plot Rainfall Plot
