@@ -12,9 +12,11 @@ sig_plot_snv(gr_snv, snv_counts, ref_genome)
 \item{snv_counts}{A matrix with counts of SNV contexts.}
 
 \item{ref_genome}{The BSGenome reference genome to use.}
+
+\item{rainfall}{Logical. Whether to generate rainfall plot. Default is TRUE.}
 }
 \value{
-A list with four ggplot2 objects:
+A list with up to five ggplot2 objects:
 \itemize{
 \item p_heatmap: a SNV mutation matrix as a heatmap.
 This is especially usefull when looking at a wide mutational context.
@@ -22,6 +24,7 @@ This is especially usefull when looking at a wide mutational context.
 This is especially usefull when looking at a wide mutational context.
 \item p_96_profile: relative contribution of 96 trinucleotides.
 \item p_spectrum: point mutation spectrum.
+\item p_rainfall: a rainfall plot showing intermutational distances (if rainfall = TRUE).
 }
 }
 \description{

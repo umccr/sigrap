@@ -33,7 +33,9 @@ require(patchwork)
 params <- list(
   vcf = system.file("extdata/umccrise/snv/somatic-ensemble-PASS.vcf.gz", package = "gpgr"),
   nm = "sampleA",
-  outdir = "outputs"
+  outdir = "outputs",
+  include_rainfall = FALSE,
+  include_strand_bias = FALSE
 )
 
 gr <- MutationalPatterns::read_vcfs_as_granges(
@@ -49,13 +51,30 @@ gr <- MutationalPatterns::read_vcfs_as_granges(
 
 ### Plots
 
-```{r snv_plots, fig.width=12, fig.height=10, out.width="90%"}
+```{r snv_plots, fig.width=12, fig.height=12, out.width="90%"}
 snv_counts <- sigrap::sig_count_snv(vcf_gr = gr, ref_genome = ref_genome)
 p_snvs <- sigrap::sig_plot_snv(
-  gr_snv = snv_counts$gr_snv, snv_counts = snv_counts$snv_counts,
-  ref_genome = ref_genome
+  vcf_gr = gr, snv_counts = snv_counts$snv_counts,
+  ref_genome = ref_genome, rainfall = params$include_rainfall
 )
 p_snvs$p_river + p_snvs$p_heatmap + p_snvs$p_spectrum + p_snvs$p_96_profile + patchwork::plot_layout(ncol = 1)
+```
+
+```{r rainfall, out.width="100%", out.height="600px", fig.width=20, fig.height=8, eval=params$include_rainfall}
+if (!is.null(p_snvs$p_rainfall)) {
+  p_snvs$p_rainfall
+}
+```
+
+### Strand Bias Analysis
+
+```{r strand_bias, fig.width=16, fig.height=10, out.width="100%", eval=params$include_strand_bias}
+# Optional strand bias analysis
+strand_plots <- sigrap::sig_plot_strand_bias(vcf_gr = gr, ref_genome = ref_genome)
+
+# Display plots in 2x2 layout
+(strand_plots$p_transcriptional_bias / strand_plots$p_transcriptional_effect) | 
+(strand_plots$p_replicative_bias / strand_plots$p_replicative_effect)
 ```
 
 ### Signature Contributions

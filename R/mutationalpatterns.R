@@ -143,8 +143,9 @@ sig_count_snv <- function(vcf_gr, ref_genome) {
 #' @param gr_snv GRanges containing SNVs from a single sample.
 #' @param snv_counts A matrix with counts of SNV contexts.
 #' @param ref_genome The BSGenome reference genome to use.
+#' @param rainfall Logical. Whether to generate rainfall plot. Default is TRUE.
 #'
-#' @return A list with four ggplot2 objects:
+#' @return A list with up to five ggplot2 objects:
 #' - p_heatmap: a SNV mutation matrix as a heatmap.
 #'   This is especially usefull when looking at a wide mutational context.
 #' - p_river: a SNV mutation matrix as a riverplot.
