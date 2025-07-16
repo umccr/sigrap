@@ -303,7 +303,13 @@ sig_workflow_run <- function(vcf, sample_nm, ref_genome = "hg38", outdir, rainfa
       nm <- names(pl)[i]
       fn <- file.path(outdir, paste0(nm, ".png"))
       plot_obj <- pl[[i]]
-      ggplot2::ggsave(filename = fn, plot = plot_obj)
+      
+      # Use larger dimensions for rainfall plots
+      if (nm == "p_rainfall") {
+        ggplot2::ggsave(filename = fn, plot = plot_obj, width = 25, height = 8, units = "in", dpi = 300)
+      } else {
+        ggplot2::ggsave(filename = fn, plot = plot_obj, width = 10, height = 6, units = "in", dpi = 300)
+      }
     }
   }
 
