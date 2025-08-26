@@ -48,7 +48,8 @@ Suggests:
     scales,
     testthat (>= 3.0.0),
     tibble,
-    tidyselect
+    tidyselect,
+    TxDb.Hsapiens.UCSC.hg38.knownGene
 Roxygen: list(markdown = TRUE,
               roclets = c("namespace", "rd", "roxytest::testthat_roclet"))
 biocViews:

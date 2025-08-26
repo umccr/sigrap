@@ -25,6 +25,15 @@ require(ref_genome, character.only = TRUE)
 require(devtools)
 require(dplyr)
 require(patchwork)
+
+# Check for optional TxDb package needed for strand bias analysis
+txdb_available <- requireNamespace("TxDb.Hsapiens.UCSC.hg38.knownGene", quietly = TRUE)
+if (txdb_available) {
+  message("✓ TxDb.Hsapiens.UCSC.hg38.knownGene available - strand bias analysis enabled")
+} else {
+  message("ℹ Install TxDb.Hsapiens.UCSC.hg38.knownGene for strand bias analysis:")
+  message("  BiocManager::install('TxDb.Hsapiens.UCSC.hg38.knownGene')")
+}
 ```
 
 ## Data Preparation

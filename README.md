@@ -1,11 +1,11 @@
 
-- [🎶 sigrap](#id_-sigrap)
+- [🎶 sigrap](#-sigrap)
   - [Installation](#installation)
   - [Main Modules](#main-modules)
-    - [🔍 HRDetect](#id_-hrdetect)
-    - [🎸 CHORD](#id_-chord)
-    - [🐾 MutationalPatterns](#id_-mutationalpatterns)
-  - [💻 CLI](#id_-cli)
+    - [🔍 HRDetect](#-hrdetect)
+    - [🎸 CHORD](#-chord)
+    - [🐾 MutationalPatterns](#-mutationalpatterns)
+  - [💻 CLI](#-cli)
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
@@ -55,6 +55,14 @@ Wraps functionality from
 [MutationalPatterns](https://github.com/UMCUGenetics/MutationalPatterns) -
 see vignette at
 <https://umccr.github.io/sigrap/articles/mutationalpatterns.html>.
+
+optional analysis:
+- **Rainfall plots**: Visualize intermutational distances across chromosomes
+- **Strand bias analysis**: Analyze transcriptional and replicative strand bias patterns
+
+**Optional dependencies or strand bias analysis:**
+- `TxDb.Hsapiens.UCSC.hg38.knownGene`
+  - Install with: `BiocManager::install("TxDb.Hsapiens.UCSC.hg38.knownGene")`
 
 ## 💻 CLI
 
@@ -119,9 +127,12 @@ export PATH="${sigrap_cli}:${PATH}"
 
     sigrap.R mutpat --help
     usage: sigrap mutpat [-h] --sample SAMPLE --snv SNV --outdir OUTDIR
+                         [--rainfall] [--strand-bias]
 
     options:
       -h, --help       show this help message and exit
       --sample SAMPLE  Sample name.
       --snv SNV        Input SNV file (VCF format).
       --outdir OUTDIR  Output directory to write results to.
+      --rainfall       Include rainfall plot.
+      --strand-bias    Include strand bias analysis.
