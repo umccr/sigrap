@@ -15,9 +15,9 @@ mutpat_parse_args <- function(args) {
   strand_bias <- if(is.null(args$strand_bias)) FALSE else args$strand_bias
   
   sigrap::sig_workflow_run(
-    vcf = args$snv, 
-    sample_nm = args$sample, 
-    outdir = args$out,
+    vcf = args$snv,
+    sample_nm = args$sample,
+    outdir = args$outdir,
     rainfall = rainfall,
     strand_bias = strand_bias
   )
