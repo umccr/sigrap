@@ -6,7 +6,6 @@
     - [🎸 CHORD](#-chord)
     - [🐾 MutationalPatterns](#-mutationalpatterns)
   - [💻 CLI](#-cli)
-
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
 # 🎶 sigrap
@@ -60,7 +59,7 @@ optional analysis:
 - **Rainfall plots**: Visualize intermutational distances across chromosomes
 - **Strand bias analysis**: Analyze transcriptional and replicative strand bias patterns
 
-**Optional dependencies or strand bias analysis:**
+**Optional dependencies for strand bias analysis:**
 - `TxDb.Hsapiens.UCSC.hg38.knownGene`
   - Install with: `BiocManager::install("TxDb.Hsapiens.UCSC.hg38.knownGene")`
 
