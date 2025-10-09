@@ -4,7 +4,14 @@
 \alias{sig_workflow_run}
 \title{Run MutationalPatterns Workflow}
 \usage{
-sig_workflow_run(vcf, sample_nm, ref_genome = "hg38", outdir, rainfall = FALSE, strand_bias = FALSE)
+sig_workflow_run(
+  vcf,
+  sample_nm,
+  ref_genome = "hg38",
+  outdir,
+  rainfall = FALSE,
+  strand_bias = FALSE
+)
 }
 \arguments{
 \item{vcf}{VCF file with SNVs.}
