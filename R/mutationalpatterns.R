@@ -128,6 +128,7 @@ sig_contribution_table <- function(contr, type, outdir = NULL) {
 #'
 #' @export
 sig_count_snv <- function(vcf_gr, ref_genome) {
+  cli::cli_h2(glue::glue("{date_log()} Counting SNV contexts"))
   gr_snv <- MutationalPatterns::get_mut_type(vcf_list = vcf_gr, type = "snv")
   snv_counts <- MutationalPatterns::mut_matrix(vcf_list = gr_snv, ref_genome = ref_genome)
   list(
@@ -205,6 +206,7 @@ sig_plot_snv <- function(gr_snv, snv_counts, ref_genome, rainfall = FALSE) {
 #'
 #' @export
 sig_count_indel <- function(vcf_gr, ref_genome) {
+  cli::cli_h2(glue::glue("{date_log()} Counting INDEL contexts"))
   gr_indel <- MutationalPatterns::get_mut_type(vcf_list = vcf_gr, type = "indel")
   gr_indel <- MutationalPatterns::get_indel_context(vcf_list = gr_indel, ref_genome = ref_genome)
   indel_counts <- MutationalPatterns::count_indel_contexts(vcf_list = gr_indel)
@@ -249,11 +251,30 @@ sig_plot_indel <- function(indel_counts) {
 #'
 #' @export
 sig_count_dbs <- function(vcf_gr) {
-  gr_dbs <- MutationalPatterns::get_mut_type(vcf_list = vcf_gr, type = "dbs")
+  cli::cli_h2(glue::glue("{date_log()} Counting DBS contexts"))
+  gr_dbs <- MutationalPatterns::get_mut_type(vcf_list = vcf_gr, type = "dbs", predefined_dbs_mbs = TRUE)
   gr_dbs <- MutationalPatterns::get_dbs_context(vcf_list = gr_dbs)
   dbs_counts <- MutationalPatterns::count_dbs_contexts(vcf_list = gr_dbs)
   dbs_counts
 }
+
+
+#' Count MNV Contexts
+#'
+#' Counts MNV (Multi-Nucleotide Variant) Contexts.
+#'
+#' @param vcf_gr GRanges containing all mutation types from a single sample.
+#'
+#' @return A matrix containing the number of MNVs per COSMIC context per gr.
+#'
+#' @export
+sig_count_mnv <- function(vcf_gr) {
+  cli::cli_h2(glue::glue("{date_log()} Counting MNV contexts"))
+  gr_mbs <- MutationalPatterns::get_mut_type(vcf_list = vcf_gr, type = "mbs", predefined_dbs_mbs = TRUE)
+  mbs_counts <- MutationalPatterns::count_mbs_contexts(gr_mbs)  # counts by length (3, 4, 5+)
+  mbs_counts
+}
+
 
 #' Plot DBS Mutation Characteristics
 #'
