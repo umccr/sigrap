@@ -3,8 +3,8 @@
 suppressPackageStartupMessages(require(argparse))
 suppressPackageStartupMessages(require(cli))
 suppressPackageStartupMessages(require(glue))
-suppressPackageStartupMessages(require(sigrap))
 
+devtools::load_all("~/github/sigrap")
 prog_nm <- "sigrap"
 sigrap_version <- as.character(packageVersion("sigrap"))
 p <- argparse::ArgumentParser(description = "Somatic signature wrappers", prog = prog_nm)

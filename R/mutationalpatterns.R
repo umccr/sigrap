@@ -259,20 +259,70 @@ sig_count_dbs <- function(vcf_gr) {
 }
 
 
-#' Count MNV Contexts
+#' Count mbs Contexts
 #'
-#' Counts MNV (Multi-Nucleotide Variant) Contexts.
+#' Counts mbs (Multi-Base Substitution) Contexts.
 #'
 #' @param vcf_gr GRanges containing all mutation types from a single sample.
 #'
-#' @return A matrix containing the number of MNVs per COSMIC context per gr.
+#' @return A matrix containing the number of MBSs per COSMIC context per gr.
 #'
 #' @export
-sig_count_mnv <- function(vcf_gr) {
-  cli::cli_h2(glue::glue("{date_log()} Counting MNV contexts"))
+sig_count_mbs <- function(vcf_gr) {
+  cli::cli_h2(glue::glue("{date_log()} Counting MBS contexts"))
   gr_mbs <- MutationalPatterns::get_mut_type(vcf_list = vcf_gr, type = "mbs", predefined_dbs_mbs = TRUE)
   mbs_counts <- MutationalPatterns::count_mbs_contexts(gr_mbs)  # counts by length (3, 4, 5+)
   mbs_counts
+}
+
+
+#' Plot MBS Mutation Characteristics
+#'
+#' Plots MBS (Multi-Base Substitution) mutation characteristics.
+#'
+#' @param mbs_counts MBS context counts (matrix with counts by length).
+#' @param same_y Logical. If TRUE, all facets have the same y-axis scale. Default is TRUE.
+#'
+#' @return A ggplot2 object showing MBS contexts.
+#'
+#' @export
+sig_plot_mbs <- function(mbs_counts, same_y = TRUE) {
+  p_mbs <- MutationalPatterns::plot_mbs_contexts(counts = mbs_counts, same_y = same_y)
+  
+  list(
+    p_mbs = p_mbs
+  )
+}
+
+
+#' Create MBS Table for JSON Output
+#'
+#' Creates a table of MBS counts by variant length (3bp, 4bp, 5+bp) for JSON export.
+#' Unlike other signature types, MBS counts are simple counts categorized by length 
+#' rather than fitted signature patterns.
+#'
+#' @param mbs_counts MBS context counts (matrix with counts by length).
+#'
+#' @return A tibble with Type (MBS length category) and Count columns.
+#'
+#' @export
+sig_mbs_table <- function(mbs_counts) {
+  # Sum across samples if multiple columns (though typically should be single sample)
+  if (is.matrix(mbs_counts)) {
+    total_counts <- rowSums(mbs_counts)
+  } else {
+    total_counts <- mbs_counts
+  }
+  
+  # Create simple tibble with counts by MBS type
+  mbs_table <- tibble::tibble(
+    Type = names(total_counts),
+    Count = as.integer(total_counts)
+  ) |>
+    dplyr::filter(.data$Count > 0) |>
+    dplyr::arrange(dplyr::desc(.data$Count))
+  
+  mbs_table
 }
 
 
@@ -309,6 +359,7 @@ sig_plot_dbs <- function(dbs_counts) {
 #' @param outdir Directory path to output all the results to.
 #' @param rainfall Logical. Whether to generate rainfall plot. Default is FALSE.
 #' @param strand_bias Logical. Whether to generate strand bias analysis. Default is FALSE.
+#' @param predefined_dbs_mbs Logical. Whether DBS/MBS variants are predefined in the VCF. Default is TRUE.
 #'
 #' @export
 sig_workflow_run <- function(vcf, sample_nm, ref_genome = "hg38", outdir, rainfall = FALSE, strand_bias = FALSE) {
@@ -388,6 +439,14 @@ sig_workflow_run <- function(vcf, sample_nm, ref_genome = "hg38", outdir, rainfa
     }() |>
     sigrap::sig_contribution_table(type = "DBS")
 
+  #---- MBS ----#
+  # counts and plots
+  mbs_counts <- sigrap::sig_count_mbs(vcf_gr = gr)
+  p_mbs <- sigrap::sig_plot_mbs(mbs_counts = mbs_counts, same_y = TRUE)
+  
+  # Create MBS table for JSON export
+  mbs_table <- sigrap::sig_mbs_table(mbs_counts = mbs_counts)
+
   #---- Indels ----#
   # plots
   indel_counts <- sigrap::sig_count_indel(vcf_gr = gr, ref_genome = ref_genome)
@@ -407,10 +466,12 @@ sig_workflow_run <- function(vcf, sample_nm, ref_genome = "hg38", outdir, rainfa
     save_plot_list(p_strand, file.path(outdir, "plot/strand"))
   }
   save_plot_list(p_dbs, file.path(outdir, "plot/dbs"))
+  save_plot_list(p_mbs, file.path(outdir, "plot/mbs"))
   save_plot_list(p_indel, file.path(outdir, "plot/indel"))
   write_jsongz(x = sigs_snv_2015, path = file.path(outdir, "sigs/snv2015.json.gz"))
   write_jsongz(x = sigs_snv_2020, path = file.path(outdir, "sigs/snv2020.json.gz"))
   write_jsongz(x = sigs_dbs, path = file.path(outdir, "sigs/dbs.json.gz"))
+  write_jsongz(x = mbs_table, path = file.path(outdir, "sigs/mbs.json.gz"))
   write_jsongz(x = sigs_indel, path = file.path(outdir, "sigs/indel.json.gz"))
   cli::cli_h2(glue::glue("{date_log()} End of MutationalPatterns workflow"))
 }

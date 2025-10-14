@@ -25,6 +25,8 @@ sig_workflow_run(
 \item{rainfall}{Logical. Whether to generate rainfall plot. Default is FALSE.}
 
 \item{strand_bias}{Logical. Whether to generate strand bias analysis. Default is FALSE.}
+
+\item{predefined_dbs_mbs}{Logical. Whether DBS/MBS variants are predefined in the VCF. Default is TRUE.}
 }
 \description{
 Runs a MutationalPatterns Workflow.
