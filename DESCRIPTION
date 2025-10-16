@@ -2,7 +2,7 @@ Package: sigrap
 Title: Wrappers for somatic mutation signature analysis tools
 Version: 0.2.0
 Description: Wraps functionality from somatic signature analysis tools.
-Authors@R:
+Authors@R: c(
     person(given = "Peter",
         family = "Diakumis",
         role = c("aut"),
@@ -13,6 +13,7 @@ Authors@R:
         role = c("cre", "ctb"),
         email = "quentin.clayssen@gamil.com",
         comment = c(ORCID = "0000-0002-2574-073X"))
+)
 URL: https://umccr.github.io/sigrap/, https://github.com/umccr/sigrap
 BugReports: https://github.com/umccr/sigrap/issues
 License: MIT + file LICENSE
