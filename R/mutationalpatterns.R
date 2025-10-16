@@ -143,17 +143,20 @@ sig_count_snv <- function(vcf_gr, ref_genome) {
 #' @param gr_snv GRanges containing SNVs from a single sample.
 #' @param snv_counts A matrix with counts of SNV contexts.
 #' @param ref_genome The BSGenome reference genome to use.
+#' @param rainfall Logical. Whether to generate rainfall plot. Default is FALSE.
 #'
-#' @return A list with four ggplot2 objects:
+#' @return A list with up to five ggplot2 objects:
 #' - p_heatmap: a SNV mutation matrix as a heatmap.
 #'   This is especially usefull when looking at a wide mutational context.
 #' - p_river: a SNV mutation matrix as a riverplot.
 #'   This is especially usefull when looking at a wide mutational context.
 #' - p_96_profile: relative contribution of 96 trinucleotides.
 #' - p_spectrum: point mutation spectrum.
+#' - p_rainfall: a rainfall plot showing intermutational distances (if rainfall = TRUE).
 #'
 #' @export
-sig_plot_snv <- function(gr_snv, snv_counts, ref_genome) {
+sig_plot_snv <- function(gr_snv, snv_counts, ref_genome, rainfall = FALSE) {
+  
   mut_to <- MutationalPatterns::mut_type_occurrences(
     vcf_list = gr_snv, ref_genome = ref_genome
   )
@@ -172,13 +175,23 @@ sig_plot_snv <- function(gr_snv, snv_counts, ref_genome) {
     ggplot2::theme(legend.position = "none")
   p_river <- MutationalPatterns::plot_river(mut_matrix = mut_mat_ext_context) +
     ggplot2::theme(legend.position = "none")
+  
+  if (rainfall) {
+    p_rainfall <- sigrap::sig_plot_rainfall(vcf_gr = gr_snv, ref_genome = ref_genome)
+  }
 
-  list(
+  result <- list(
     p_heatmap = p_heatmap,
     p_river = p_river,
     p_96_profile = p_96_profile,
     p_spectrum = p_spectrum
   )
+  
+  if (rainfall) {
+    result$p_rainfall <- p_rainfall
+  }
+  
+  return(result)
 }
 
 #' Count INDEL Contexts
@@ -273,9 +286,11 @@ sig_plot_dbs <- function(dbs_counts) {
 #' @param sample_nm Sample name.
 #' @param ref_genome Human genome assembly string: hg38 (default), hg19 or GRCh37.
 #' @param outdir Directory path to output all the results to.
+#' @param rainfall Logical. Whether to generate rainfall plot. Default is FALSE.
+#' @param strand_bias Logical. Whether to generate strand bias analysis. Default is FALSE.
 #'
 #' @export
-sig_workflow_run <- function(vcf, sample_nm, ref_genome = "hg38", outdir) {
+sig_workflow_run <- function(vcf, sample_nm, ref_genome = "hg38", outdir, rainfall = FALSE, strand_bias = FALSE) {
   fs::dir_create(outdir)
   outdir <- normalizePath(outdir)
   ref_genome <- get_genome_obj(ref_genome)
@@ -288,7 +303,13 @@ sig_workflow_run <- function(vcf, sample_nm, ref_genome = "hg38", outdir) {
       nm <- names(pl)[i]
       fn <- file.path(outdir, paste0(nm, ".png"))
       plot_obj <- pl[[i]]
-      ggplot2::ggsave(filename = fn, plot = plot_obj)
+      
+      # Use larger dimensions for rainfall plots
+      if (nm == "p_rainfall") {
+        ggplot2::ggsave(filename = fn, plot = plot_obj, width = 25, height = 8, units = "in", dpi = 300)
+      } else {
+        ggplot2::ggsave(filename = fn, plot = plot_obj, width = 10, height = 6, units = "in", dpi = 300)
+      }
     }
   }
 
@@ -307,8 +328,12 @@ sig_workflow_run <- function(vcf, sample_nm, ref_genome = "hg38", outdir) {
   snv_counts <- sigrap::sig_count_snv(vcf_gr = gr, ref_genome = ref_genome)
   p_snv <- sigrap::sig_plot_snv(
     gr_snv = snv_counts$gr_snv, snv_counts = snv_counts$snv_counts,
-    ref_genome = ref_genome
+    ref_genome = ref_genome, rainfall = rainfall
   )
+
+  if (strand_bias) {
+    p_strand <- sigrap::sig_plot_strand_bias(vcf_gr = gr, ref_genome = ref_genome)
+  }
 
   # signature contributions (2015)
   sigs_snv_2015 <-
@@ -357,6 +382,9 @@ sig_workflow_run <- function(vcf, sample_nm, ref_genome = "hg38", outdir) {
 
   cli::cli_h2(glue::glue("{date_log()} Saving MutationalPatterns results to\n'{outdir}'"))
   save_plot_list(p_snv, file.path(outdir, "plot/snv"))
+  if (strand_bias) {
+    save_plot_list(p_strand, file.path(outdir, "plot/strand"))
+  }
   save_plot_list(p_dbs, file.path(outdir, "plot/dbs"))
   save_plot_list(p_indel, file.path(outdir, "plot/indel"))
   write_jsongz(x = sigs_snv_2015, path = file.path(outdir, "sigs/snv2015.json.gz"))
@@ -364,4 +392,122 @@ sig_workflow_run <- function(vcf, sample_nm, ref_genome = "hg38", outdir) {
   write_jsongz(x = sigs_dbs, path = file.path(outdir, "sigs/dbs.json.gz"))
   write_jsongz(x = sigs_indel, path = file.path(outdir, "sigs/indel.json.gz"))
   cli::cli_h2(glue::glue("{date_log()} End of MutationalPatterns workflow"))
+}
+
+#' Plot Strand Bias Analysis
+#'
+#' Plots transcriptional and replicative strand bias analysis.
+#'
+#' @param vcf_gr GRanges containing all mutation types from a single sample.
+#' @param ref_genome The BSGenome reference genome to use.
+#'
+#' @return A list with four ggplot2 objects:
+#' - p_transcriptional_bias: transcriptional strand bias plot
+#' - p_transcriptional_effect: transcriptional strand bias effect size
+#' - p_replicative_bias: replicative strand bias plot  
+#' - p_replicative_effect: replicative strand bias effect size
+#'
+#' @export
+sig_plot_strand_bias <- function(vcf_gr, ref_genome) {
+  mutpat_gr_snv <- MutationalPatterns::get_mut_type(vcf_gr, type = "snv")
+  
+  ## ---- Transcriptional ---- ##
+  # Only support hg38 for strand bias analysis
+  txdb_pkg <- "TxDb.Hsapiens.UCSC.hg38.knownGene"
+  if (!requireNamespace(txdb_pkg, quietly = TRUE)) {
+    stop(txdb_pkg, " package not available. ",
+         "Install with: BiocManager::install('", txdb_pkg, "')")
+  }
+  
+  library(txdb_pkg, character.only = TRUE)
+  genes_list <- GenomicFeatures::genes(TxDb.Hsapiens.UCSC.hg38.knownGene)
+  
+  # Transcriptional strand bias
+  mut_mat_s <- MutationalPatterns::mut_matrix_stranded(
+    vcf_list = mutpat_gr_snv, ref_genome = ref_genome, 
+    ranges = genes_list, mode = "transcription"
+  )
+  strand_counts <- MutationalPatterns::strand_occurrences(mut_mat_s, by = "all")
+  strand_bias <- MutationalPatterns::strand_bias_test(strand_counts)
+  
+  p_transcriptional_bias <- MutationalPatterns::plot_strand(strand_counts, mode = "relative") +
+    ggplot2::ggtitle("Transcriptional Strand Bias")
+  p_transcriptional_effect <- MutationalPatterns::plot_strand_bias(strand_bias) +
+    ggplot2::ggtitle("Transcriptional Bias Effect Size")
+  
+  ## ---- Replicative ---- ##
+  repli_file <- system.file("extdata/ReplicationDirectionRegions.bed", package = "MutationalPatterns")
+  repli_strand <- readr::read_tsv(repli_file, col_names = TRUE, col_types = "cddcc") |>
+    dplyr::mutate_if(is.character, as.factor)
+  
+  repli_strand_granges <- GenomicRanges::GRanges(
+    seqnames = repli_strand$Chr,
+    ranges = IRanges::IRanges(start = repli_strand$Start + 1, end = repli_strand$Stop),
+    strand_info = repli_strand$Class
+  )
+  GenomeInfoDb::seqlevelsStyle(repli_strand_granges) <- GenomeInfoDb::seqlevelsStyle(ref_genome)
+  
+  mut_mat_s_rep <- MutationalPatterns::mut_matrix_stranded(
+    vcf_list = mutpat_gr_snv, ref_genome = ref_genome, 
+    ranges = repli_strand_granges, mode = "replication"
+  )
+  strand_counts_rep <- MutationalPatterns::strand_occurrences(mut_mat_s_rep, by = "all")
+  strand_bias_rep <- MutationalPatterns::strand_bias_test(strand_counts_rep)
+  
+  p_replicative_bias <- MutationalPatterns::plot_strand(strand_counts_rep, mode = "relative") +
+    ggplot2::ggtitle("Replicative Strand Bias")
+  p_replicative_effect <- MutationalPatterns::plot_strand_bias(strand_bias_rep) +
+    ggplot2::ggtitle("Replicative Bias Effect Size")
+  
+  list(
+    p_transcriptional_bias = p_transcriptional_bias,
+    p_transcriptional_effect = p_transcriptional_effect,
+    p_replicative_bias = p_replicative_bias,
+    p_replicative_effect = p_replicative_effect
+  )
+}
+
+#' Plot Rainfall Plot
+#'
+#' Generates a rainfall plot showing intermutational distances.
+#'
+#' @param vcf_gr GRanges containing all mutation types from a single sample.
+#' @param ref_genome The BSGenome reference genome to use.
+#'
+#' @return A ggplot2 object representing the rainfall plot, or an informative 
+#' placeholder plot if the rainfall plot cannot be generated.
+#'
+#' @export
+sig_plot_rainfall <- function(vcf_gr, ref_genome) {
+  gr_snv_rainfall <- MutationalPatterns::get_mut_type(vcf_gr, type = "snv")
+  
+  # When there is only 1 or lower number of variants on a chromosome,
+  # MutationalPatterns::plot_rainfall will crash with an error. So need to check if it will work beforehand.
+  chromosomes <- GenomeInfoDb::seqnames(ref_genome)[1:22]
+  vcf <- gr_snv_rainfall[[1]]
+  will_work <- FALSE
+  for (i in 1:length(chromosomes)) {
+    chr_subset <- vcf[GenomeInfoDb::seqnames(vcf) == chromosomes[i]]
+    n <- length(chr_subset)
+    if (n >= 2) {
+      will_work <- TRUE
+      break
+    }
+  }
+  if (will_work) {
+    p_rainfall <- MutationalPatterns::plot_rainfall(vcf,
+      chromosomes = GenomeInfoDb::seqnames(ref_genome)[1:22],
+      cex = 1.2, ylim = 1e+09
+    )
+  } else {
+    # Create a placeholder when insufficient data
+    p_rainfall <- ggplot2::ggplot() +
+      ggplot2::annotate("text", x = 0.5, y = 0.5, 
+                       label = "Insufficient variants for rainfall plot\n(need ≥2 variants per chromosome)",
+                       hjust = 0.5, vjust = 0.5, size = 4) +
+      ggplot2::theme_void() +
+      ggplot2::labs(title = paste("Rainfall Plot -", names(gr_snv_rainfall)[1]))
+  }
+  
+  return(p_rainfall)
 }
