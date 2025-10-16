@@ -12,7 +12,7 @@ sig_plot_mbs(mbs_counts, same_y = TRUE)
 \item{same_y}{Logical. If TRUE, all facets have the same y-axis scale. Default is TRUE.}
 }
 \value{
-A ggplot2 object showing MBS contexts.
+A list with p_mbs (ggplot2 object) showing MBS contexts.
 }
 \description{
 Plots MBS (Multi-Base Substitution) mutation characteristics.

@@ -4,16 +4,15 @@
 \alias{sig_count_mbs}
 \title{Count mbs Contexts}
 \usage{
-sig_count_mbs(vcf_gr)
+sig_count_mbs(vcf_gr, predefined_dbs_mbs = TRUE)
 }
 \arguments{
 \item{vcf_gr}{GRanges containing all mutation types from a single sample.}
 
-\item{predefined_dbs_mbs}{Logical. Whether MBS variants are predefined in the VCF
-(TRUE) or need to be detected from adjacent SNVs (FALSE). Default is TRUE.}
+\item{predefined_dbs_mbs}{Logical. Whether DBS/MBS variants are predefined in the VCF. Default is TRUE.}
 }
 \value{
-A matrix containing the number of MBSs per COSMIC context per gr.
+A matrix or named vector of MBS counts by length category (3bp, 4bp, 5+bp).
 }
 \description{
 Counts mbs (Multi-Base Substitution) Contexts.

@@ -246,13 +246,14 @@ sig_plot_indel <- function(indel_counts) {
 #' Counts DBS Contexts.
 #'
 #' @param vcf_gr GRanges containing all mutation types from a single sample.
+#' @param predefined_dbs_mbs Logical. Whether DBS/MBS variants are predefined in the VCF. Default is TRUE.
 #'
 #' @return A tibble containing the number of DBS per COSMIC context per gr.
 #'
 #' @export
-sig_count_dbs <- function(vcf_gr) {
+sig_count_dbs <- function(vcf_gr, predefined_dbs_mbs = TRUE) {
   cli::cli_h2(glue::glue("{date_log()} Counting DBS contexts"))
-  gr_dbs <- MutationalPatterns::get_mut_type(vcf_list = vcf_gr, type = "dbs", predefined_dbs_mbs = TRUE)
+  gr_dbs <- MutationalPatterns::get_mut_type(vcf_list = vcf_gr, type = "dbs", predefined_dbs_mbs = predefined_dbs_mbs)
   gr_dbs <- MutationalPatterns::get_dbs_context(vcf_list = gr_dbs)
   dbs_counts <- MutationalPatterns::count_dbs_contexts(vcf_list = gr_dbs)
   dbs_counts
@@ -264,13 +265,14 @@ sig_count_dbs <- function(vcf_gr) {
 #' Counts mbs (Multi-Base Substitution) Contexts.
 #'
 #' @param vcf_gr GRanges containing all mutation types from a single sample.
+#' @param predefined_dbs_mbs Logical. Whether DBS/MBS variants are predefined in the VCF. Default is TRUE.
 #'
-#' @return A matrix containing the number of MBSs per COSMIC context per gr.
+#' @return A matrix or named vector of MBS counts by length category (3bp, 4bp, 5+bp).
 #'
 #' @export
-sig_count_mbs <- function(vcf_gr) {
+sig_count_mbs <- function(vcf_gr, predefined_dbs_mbs = TRUE) {
   cli::cli_h2(glue::glue("{date_log()} Counting MBS contexts"))
-  gr_mbs <- MutationalPatterns::get_mut_type(vcf_list = vcf_gr, type = "mbs", predefined_dbs_mbs = TRUE)
+  gr_mbs <- MutationalPatterns::get_mut_type(vcf_list = vcf_gr, type = "mbs", predefined_dbs_mbs = predefined_dbs_mbs)
   mbs_counts <- MutationalPatterns::count_mbs_contexts(gr_mbs)  # counts by length (3, 4, 5+)
   mbs_counts
 }
@@ -283,7 +285,7 @@ sig_count_mbs <- function(vcf_gr) {
 #' @param mbs_counts MBS context counts (matrix with counts by length).
 #' @param same_y Logical. If TRUE, all facets have the same y-axis scale. Default is TRUE.
 #'
-#' @return A ggplot2 object showing MBS contexts.
+#' @return A list with p_mbs (ggplot2 object) showing MBS contexts.
 #'
 #' @export
 sig_plot_mbs <- function(mbs_counts, same_y = TRUE) {
@@ -362,7 +364,7 @@ sig_plot_dbs <- function(dbs_counts) {
 #' @param predefined_dbs_mbs Logical. Whether DBS/MBS variants are predefined in the VCF. Default is TRUE.
 #'
 #' @export
-sig_workflow_run <- function(vcf, sample_nm, ref_genome = "hg38", outdir, rainfall = FALSE, strand_bias = FALSE) {
+sig_workflow_run <- function(vcf, sample_nm, ref_genome = "hg38", outdir, rainfall = FALSE, strand_bias = FALSE, predefined_dbs_mbs = TRUE) {
   fs::dir_create(outdir)
   outdir <- normalizePath(outdir)
   ref_genome <- get_genome_obj(ref_genome)
@@ -428,7 +430,7 @@ sig_workflow_run <- function(vcf, sample_nm, ref_genome = "hg38", outdir, rainfa
 
   #---- DBS ----#
   # plots
-  dbs_counts <- sigrap::sig_count_dbs(vcf_gr = gr)
+  dbs_counts <- sigrap::sig_count_dbs(vcf_gr = gr, predefined_dbs_mbs = predefined_dbs_mbs)
   p_dbs <- sigrap::sig_plot_dbs(dbs_counts = dbs_counts)
 
   # signature contributions
@@ -441,7 +443,7 @@ sig_workflow_run <- function(vcf, sample_nm, ref_genome = "hg38", outdir, rainfa
 
   #---- MBS ----#
   # counts and plots
-  mbs_counts <- sigrap::sig_count_mbs(vcf_gr = gr)
+  mbs_counts <- sigrap::sig_count_mbs(vcf_gr = gr, predefined_dbs_mbs = predefined_dbs_mbs)
   p_mbs <- sigrap::sig_plot_mbs(mbs_counts = mbs_counts, same_y = TRUE)
   
   # Create MBS table for JSON export

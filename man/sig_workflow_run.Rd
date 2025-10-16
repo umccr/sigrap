@@ -10,7 +10,8 @@ sig_workflow_run(
   ref_genome = "hg38",
   outdir,
   rainfall = FALSE,
-  strand_bias = FALSE
+  strand_bias = FALSE,
+  predefined_dbs_mbs = TRUE
 )
 }
 \arguments{
