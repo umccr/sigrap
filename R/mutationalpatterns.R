@@ -246,12 +246,12 @@ sig_plot_indel <- function(indel_counts) {
 #' Counts DBS Contexts.
 #'
 #' @param vcf_gr GRanges containing all mutation types from a single sample.
-#' @param predefined_dbs_mbs Logical. Whether DBS/MBS variants are predefined in the VCF. Default is TRUE.
+#' @param predefined_dbs_mbs Logical. Set to TRUE when DBS/MBS variants are predefined in the VCF. Default is FALSE.
 #'
 #' @return A tibble containing the number of DBS per COSMIC context per gr.
 #'
 #' @export
-sig_count_dbs <- function(vcf_gr, predefined_dbs_mbs = TRUE) {
+sig_count_dbs <- function(vcf_gr, predefined_dbs_mbs = FALSE) {
   cli::cli_h2(glue::glue("{date_log()} Counting DBS contexts"))
   gr_dbs <- MutationalPatterns::get_mut_type(vcf_list = vcf_gr, type = "dbs", predefined_dbs_mbs = predefined_dbs_mbs)
   gr_dbs <- MutationalPatterns::get_dbs_context(vcf_list = gr_dbs)
@@ -265,12 +265,12 @@ sig_count_dbs <- function(vcf_gr, predefined_dbs_mbs = TRUE) {
 #' Counts mbs (Multi-Base Substitution) Contexts.
 #'
 #' @param vcf_gr GRanges containing all mutation types from a single sample.
-#' @param predefined_dbs_mbs Logical. Whether DBS/MBS variants are predefined in the VCF. Default is TRUE.
+#' @param predefined_dbs_mbs Logical. Set to TRUE when DBS/MBS variants are predefined in the VCF. Default is FALSE.
 #'
 #' @return A matrix or named vector of MBS counts by length category (3bp, 4bp, 5+bp).
 #'
 #' @export
-sig_count_mbs <- function(vcf_gr, predefined_dbs_mbs = TRUE) {
+sig_count_mbs <- function(vcf_gr, predefined_dbs_mbs = FALSE) {
   cli::cli_h2(glue::glue("{date_log()} Counting MBS contexts"))
   gr_mbs <- MutationalPatterns::get_mut_type(vcf_list = vcf_gr, type = "mbs", predefined_dbs_mbs = predefined_dbs_mbs)
   mbs_counts <- MutationalPatterns::count_mbs_contexts(gr_mbs)  # counts by length (3, 4, 5+)
@@ -361,10 +361,10 @@ sig_plot_dbs <- function(dbs_counts) {
 #' @param outdir Directory path to output all the results to.
 #' @param rainfall Logical. Whether to generate rainfall plot. Default is FALSE.
 #' @param strand_bias Logical. Whether to generate strand bias analysis. Default is FALSE.
-#' @param predefined_dbs_mbs Logical. Whether DBS/MBS variants are predefined in the VCF. Default is TRUE.
+#' @param predefined_dbs_mbs Logical. Set to TRUE when DBS/MBS variants are predefined in the VCF. Default is FALSE.
 #'
 #' @export
-sig_workflow_run <- function(vcf, sample_nm, ref_genome = "hg38", outdir, rainfall = FALSE, strand_bias = FALSE, predefined_dbs_mbs = TRUE) {
+sig_workflow_run <- function(vcf, sample_nm, ref_genome = "hg38", outdir, rainfall = FALSE, strand_bias = FALSE, predefined_dbs_mbs = FALSE) {
   fs::dir_create(outdir)
   outdir <- normalizePath(outdir)
   ref_genome <- get_genome_obj(ref_genome)

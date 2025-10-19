@@ -4,12 +4,12 @@
 \alias{sig_count_dbs}
 \title{Count DBS Contexts}
 \usage{
-sig_count_dbs(vcf_gr, predefined_dbs_mbs = TRUE)
+sig_count_dbs(vcf_gr, predefined_dbs_mbs = FALSE)
 }
 \arguments{
 \item{vcf_gr}{GRanges containing all mutation types from a single sample.}
 
-\item{predefined_dbs_mbs}{Logical. Whether DBS/MBS variants are predefined in the VCF. Default is TRUE.}
+\item{predefined_dbs_mbs}{Logical. Set to TRUE when DBS/MBS variants are predefined in the VCF. Default is FALSE.}
 }
 \value{
 A tibble containing the number of DBS per COSMIC context per gr.

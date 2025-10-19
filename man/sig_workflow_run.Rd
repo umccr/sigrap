@@ -11,7 +11,7 @@ sig_workflow_run(
   outdir,
   rainfall = FALSE,
   strand_bias = FALSE,
-  predefined_dbs_mbs = TRUE
+  predefined_dbs_mbs = FALSE
 )
 }
 \arguments{
@@ -27,7 +27,7 @@ sig_workflow_run(
 
 \item{strand_bias}{Logical. Whether to generate strand bias analysis. Default is FALSE.}
 
-\item{predefined_dbs_mbs}{Logical. Whether DBS/MBS variants are predefined in the VCF. Default is TRUE.}
+\item{predefined_dbs_mbs}{Logical. Set to TRUE when DBS/MBS variants are predefined in the VCF. Default is FALSE.}
 }
 \description{
 Runs a MutationalPatterns Workflow.
