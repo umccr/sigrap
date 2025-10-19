@@ -10,8 +10,8 @@ Authors@R: c(
         comment = c(ORCID = "0000-0002-7502-7545")),
     person(given = "Quentin",
         family = "Clayssen",
-        role = c("cre", "ctb"),
-        email = "quentin.clayssen@gamil.com",
+        role = c("aut", "cre"),
+        email = "quentin.clayssen@gmail.com",
         comment = c(ORCID = "0000-0002-2574-073X"))
     )
 URL: https://umccr.github.io/sigrap/, https://github.com/umccr/sigrap
