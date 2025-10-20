@@ -17,8 +17,4 @@ Useful links:
 }
 
 }
-\author{
-\strong{Maintainer}: Peter Diakumis \email{peterdiakumis@gmail.com} (\href{https://orcid.org/0000-0002-7502-7545}{ORCID})
-
-}
 \keyword{internal}

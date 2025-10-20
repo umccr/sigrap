@@ -4,7 +4,7 @@
 \alias{sig_plot_snv}
 \title{Plot SNV Mutation Characteristics}
 \usage{
-sig_plot_snv(gr_snv, snv_counts, ref_genome)
+sig_plot_snv(gr_snv, snv_counts, ref_genome, rainfall = FALSE)
 }
 \arguments{
 \item{gr_snv}{GRanges containing SNVs from a single sample.}
@@ -13,7 +13,7 @@ sig_plot_snv(gr_snv, snv_counts, ref_genome)
 
 \item{ref_genome}{The BSGenome reference genome to use.}
 
-\item{rainfall}{Logical. Whether to generate rainfall plot. Default is TRUE.}
+\item{rainfall}{Logical. Whether to generate rainfall plot. Default is FALSE.}
 }
 \value{
 A list with up to five ggplot2 objects:
