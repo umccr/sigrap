@@ -377,7 +377,7 @@ sig_workflow_run <- function(vcf, sample_nm, ref_genome = "hg38", outdir, rainfa
       nm <- names(pl)[i]
       fn <- file.path(outdir, paste0(nm, ".png"))
       plot_obj <- pl[[i]]
-      
+
       # Use larger dimensions for rainfall plots
       if (nm == "p_rainfall") {
         ggplot2::ggsave(filename = fn, plot = plot_obj, width = 25, height = 8, units = "in", dpi = 300)
@@ -411,7 +411,8 @@ sig_workflow_run <- function(vcf, sample_nm, ref_genome = "hg38", outdir, rainfa
 
   # signature contributions (2015)
   sigs_snv_2015 <-
-    cosmic_signatures_2015 |>
+    # this should get the obj from the pkg namespace
+    get("cosmic_signatures_2015") |>
     {
       \(sigs) sig_contribution(mut_mat = snv_counts$snv_counts, signatures = sigs)
     }() |>

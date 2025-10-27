@@ -17,4 +17,13 @@ Useful links:
 }
 
 }
+\author{
+\strong{Maintainer}: Quentin Clayssen \email{quentin.clayssen@gmail.com} (\href{https://orcid.org/0000-0002-2574-073X}{ORCID})
+
+Authors:
+\itemize{
+  \item Peter Diakumis \email{peterdiakumis@gmail.com} (\href{https://orcid.org/0000-0002-7502-7545}{ORCID})
+}
+
+}
 \keyword{internal}
