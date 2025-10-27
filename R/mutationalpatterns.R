@@ -178,7 +178,7 @@ sig_plot_snv <- function(gr_snv, snv_counts, ref_genome, rainfall = FALSE) {
     ggplot2::theme(legend.position = "none")
   
   if (rainfall) {
-    p_rainfall <- sigrap::sig_plot_rainfall(vcf_gr = gr_snv, ref_genome = ref_genome)
+    p_rainfall <- sig_plot_rainfall(vcf_gr = gr_snv, ref_genome = ref_genome)
   }
 
   result <- list(
@@ -399,23 +399,23 @@ sig_workflow_run <- function(vcf, sample_nm, ref_genome = "hg38", outdir, rainfa
 
   #---- SBS ----#
   # plots
-  snv_counts <- sigrap::sig_count_snv(vcf_gr = gr, ref_genome = ref_genome)
-  p_snv <- sigrap::sig_plot_snv(
+  snv_counts <- sig_count_snv(vcf_gr = gr, ref_genome = ref_genome)
+  p_snv <- sig_plot_snv(
     gr_snv = snv_counts$gr_snv, snv_counts = snv_counts$snv_counts,
     ref_genome = ref_genome, rainfall = rainfall
   )
 
   if (strand_bias) {
-    p_strand <- sigrap::sig_plot_strand_bias(vcf_gr = gr, ref_genome = ref_genome)
+    p_strand <- sig_plot_strand_bias(vcf_gr = gr, ref_genome = ref_genome)
   }
 
   # signature contributions (2015)
   sigs_snv_2015 <-
-    sigrap::cosmic_signatures_2015 |>
+    cosmic_signatures_2015 |>
     {
-      \(sigs) sigrap::sig_contribution(mut_mat = snv_counts$snv_counts, signatures = sigs)
+      \(sigs) sig_contribution(mut_mat = snv_counts$snv_counts, signatures = sigs)
     }() |>
-    sigrap::sig_contribution_table(type = "Sig")
+    sig_contribution_table(type = "Sig")
 
   # signature contributions (2020)
   sigs_snv_2020 <-
@@ -424,43 +424,43 @@ sig_workflow_run <- function(vcf, sample_nm, ref_genome = "hg38", outdir, rainfa
       incl_poss_artifacts = TRUE
     ) |>
     {
-      \(sigs) sigrap::sig_contribution(mut_mat = snv_counts$snv_counts, signatures = sigs)
+      \(sigs) sig_contribution(mut_mat = snv_counts$snv_counts, signatures = sigs)
     }() |>
-    sigrap::sig_contribution_table(type = "SBS")
+    sig_contribution_table(type = "SBS")
 
   #---- DBS ----#
   # plots
-  dbs_counts <- sigrap::sig_count_dbs(vcf_gr = gr, predefined_dbs_mbs = predefined_dbs_mbs)
-  p_dbs <- sigrap::sig_plot_dbs(dbs_counts = dbs_counts)
+  dbs_counts <- sig_count_dbs(vcf_gr = gr, predefined_dbs_mbs = predefined_dbs_mbs)
+  p_dbs <- sig_plot_dbs(dbs_counts = dbs_counts)
 
   # signature contributions
   sigs_dbs <-
     MutationalPatterns::get_known_signatures(muttype = "dbs") |>
     {
-      \(sigs) sigrap::sig_contribution(mut_mat = dbs_counts, signatures = sigs)
+      \(sigs) sig_contribution(mut_mat = dbs_counts, signatures = sigs)
     }() |>
-    sigrap::sig_contribution_table(type = "DBS")
+    sig_contribution_table(type = "DBS")
 
   #---- MBS ----#
   # counts and plots
-  mbs_counts <- sigrap::sig_count_mbs(vcf_gr = gr, predefined_dbs_mbs = predefined_dbs_mbs)
-  p_mbs <- sigrap::sig_plot_mbs(mbs_counts = mbs_counts, same_y = TRUE)
+  mbs_counts <- sig_count_mbs(vcf_gr = gr, predefined_dbs_mbs = predefined_dbs_mbs)
+  p_mbs <- sig_plot_mbs(mbs_counts = mbs_counts, same_y = TRUE)
   
   # Create MBS table for JSON export
-  mbs_table <- sigrap::sig_mbs_table(mbs_counts = mbs_counts)
+  mbs_table <- sig_mbs_table(mbs_counts = mbs_counts)
 
   #---- Indels ----#
   # plots
-  indel_counts <- sigrap::sig_count_indel(vcf_gr = gr, ref_genome = ref_genome)
-  p_indel <- sigrap::sig_plot_indel(indel_counts = indel_counts)
+  indel_counts <- sig_count_indel(vcf_gr = gr, ref_genome = ref_genome)
+  p_indel <- sig_plot_indel(indel_counts = indel_counts)
 
   # signature contributions
   sigs_indel <-
     MutationalPatterns::get_known_signatures(muttype = "indel") |>
     {
-      \(sigs) sigrap::sig_contribution(mut_mat = indel_counts, signatures = sigs)
+      \(sigs) sig_contribution(mut_mat = indel_counts, signatures = sigs)
     }() |>
-    sigrap::sig_contribution_table(type = "ID")
+    sig_contribution_table(type = "ID")
 
   cli::cli_h2(glue::glue("{date_log()} Saving MutationalPatterns results to\n'{outdir}'"))
   save_plot_list(p_snv, file.path(outdir, "plot/snv"))
