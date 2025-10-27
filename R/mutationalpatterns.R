@@ -586,7 +586,7 @@ sig_plot_rainfall <- function(vcf_gr, ref_genome) {
     # Create a placeholder when insufficient data
     p_rainfall <- ggplot2::ggplot() +
       ggplot2::annotate("text", x = 0.5, y = 0.5,
-                       label = "Insufficient variants for rainfall plot\n(need ≥2 variants per chromosome)",
+                       label = "Insufficient variants for rainfall plot\n(need >=2 variants per chromosome)",
                        hjust = 0.5, vjust = 0.5, size = 4) +
       ggplot2::theme_void() +
       ggplot2::labs(title = paste("Rainfall Plot -", names(gr_snv_rainfall)[1]))
