@@ -178,7 +178,7 @@ sig_plot_snv <- function(gr_snv, snv_counts, ref_genome, rainfall = FALSE) {
     ggplot2::theme(legend.position = "none")
   
   if (rainfall) {
-    p_rainfall <- sigrap::sig_plot_rainfall(vcf_gr = gr_snv, ref_genome = ref_genome)
+    p_rainfall <- sig_plot_rainfall(vcf_gr = gr_snv, ref_genome = ref_genome)
   }
 
   result <- list(
@@ -377,7 +377,7 @@ sig_workflow_run <- function(vcf, sample_nm, ref_genome = "hg38", outdir, rainfa
       nm <- names(pl)[i]
       fn <- file.path(outdir, paste0(nm, ".png"))
       plot_obj <- pl[[i]]
-      
+
       # Use larger dimensions for rainfall plots
       if (nm == "p_rainfall") {
         ggplot2::ggsave(filename = fn, plot = plot_obj, width = 25, height = 8, units = "in", dpi = 300)
@@ -399,23 +399,24 @@ sig_workflow_run <- function(vcf, sample_nm, ref_genome = "hg38", outdir, rainfa
 
   #---- SBS ----#
   # plots
-  snv_counts <- sigrap::sig_count_snv(vcf_gr = gr, ref_genome = ref_genome)
-  p_snv <- sigrap::sig_plot_snv(
+  snv_counts <- sig_count_snv(vcf_gr = gr, ref_genome = ref_genome)
+  p_snv <- sig_plot_snv(
     gr_snv = snv_counts$gr_snv, snv_counts = snv_counts$snv_counts,
     ref_genome = ref_genome, rainfall = rainfall
   )
 
   if (strand_bias) {
-    p_strand <- sigrap::sig_plot_strand_bias(vcf_gr = gr, ref_genome = ref_genome)
+    p_strand <- sig_plot_strand_bias(vcf_gr = gr, ref_genome = ref_genome)
   }
 
   # signature contributions (2015)
   sigs_snv_2015 <-
-    sigrap::cosmic_signatures_2015 |>
+    # this should get the obj from the pkg namespace
+    get("cosmic_signatures_2015") |>
     {
-      \(sigs) sigrap::sig_contribution(mut_mat = snv_counts$snv_counts, signatures = sigs)
+      \(sigs) sig_contribution(mut_mat = snv_counts$snv_counts, signatures = sigs)
     }() |>
-    sigrap::sig_contribution_table(type = "Sig")
+    sig_contribution_table(type = "Sig")
 
   # signature contributions (2020)
   sigs_snv_2020 <-
@@ -424,43 +425,43 @@ sig_workflow_run <- function(vcf, sample_nm, ref_genome = "hg38", outdir, rainfa
       incl_poss_artifacts = TRUE
     ) |>
     {
-      \(sigs) sigrap::sig_contribution(mut_mat = snv_counts$snv_counts, signatures = sigs)
+      \(sigs) sig_contribution(mut_mat = snv_counts$snv_counts, signatures = sigs)
     }() |>
-    sigrap::sig_contribution_table(type = "SBS")
+    sig_contribution_table(type = "SBS")
 
   #---- DBS ----#
   # plots
-  dbs_counts <- sigrap::sig_count_dbs(vcf_gr = gr, predefined_dbs_mbs = predefined_dbs_mbs)
-  p_dbs <- sigrap::sig_plot_dbs(dbs_counts = dbs_counts)
+  dbs_counts <- sig_count_dbs(vcf_gr = gr, predefined_dbs_mbs = predefined_dbs_mbs)
+  p_dbs <- sig_plot_dbs(dbs_counts = dbs_counts)
 
   # signature contributions
   sigs_dbs <-
     MutationalPatterns::get_known_signatures(muttype = "dbs") |>
     {
-      \(sigs) sigrap::sig_contribution(mut_mat = dbs_counts, signatures = sigs)
+      \(sigs) sig_contribution(mut_mat = dbs_counts, signatures = sigs)
     }() |>
-    sigrap::sig_contribution_table(type = "DBS")
+    sig_contribution_table(type = "DBS")
 
   #---- MBS ----#
   # counts and plots
-  mbs_counts <- sigrap::sig_count_mbs(vcf_gr = gr, predefined_dbs_mbs = predefined_dbs_mbs)
-  p_mbs <- sigrap::sig_plot_mbs(mbs_counts = mbs_counts, same_y = TRUE)
+  mbs_counts <- sig_count_mbs(vcf_gr = gr, predefined_dbs_mbs = predefined_dbs_mbs)
+  p_mbs <- sig_plot_mbs(mbs_counts = mbs_counts, same_y = TRUE)
   
   # Create MBS table for JSON export
-  mbs_table <- sigrap::sig_mbs_table(mbs_counts = mbs_counts)
+  mbs_table <- sig_mbs_table(mbs_counts = mbs_counts)
 
   #---- Indels ----#
   # plots
-  indel_counts <- sigrap::sig_count_indel(vcf_gr = gr, ref_genome = ref_genome)
-  p_indel <- sigrap::sig_plot_indel(indel_counts = indel_counts)
+  indel_counts <- sig_count_indel(vcf_gr = gr, ref_genome = ref_genome)
+  p_indel <- sig_plot_indel(indel_counts = indel_counts)
 
   # signature contributions
   sigs_indel <-
     MutationalPatterns::get_known_signatures(muttype = "indel") |>
     {
-      \(sigs) sigrap::sig_contribution(mut_mat = indel_counts, signatures = sigs)
+      \(sigs) sig_contribution(mut_mat = indel_counts, signatures = sigs)
     }() |>
-    sigrap::sig_contribution_table(type = "ID")
+    sig_contribution_table(type = "ID")
 
   cli::cli_h2(glue::glue("{date_log()} Saving MutationalPatterns results to\n'{outdir}'"))
   save_plot_list(p_snv, file.path(outdir, "plot/snv"))
@@ -498,13 +499,12 @@ sig_plot_strand_bias <- function(vcf_gr, ref_genome) {
   ## ---- Transcriptional ---- ##
   # Only support hg38 for strand bias analysis
   txdb_pkg <- "TxDb.Hsapiens.UCSC.hg38.knownGene"
-  if (!requireNamespace(txdb_pkg, quietly = TRUE)) {
+  if (!pkg_exists(txdb_pkg)) {
     stop(txdb_pkg, " package not available. ",
          "Install with: BiocManager::install('", txdb_pkg, "')")
   }
   
-  library(txdb_pkg, character.only = TRUE)
-  genes_list <- GenomicFeatures::genes(TxDb.Hsapiens.UCSC.hg38.knownGene)
+  genes_list <- GenomicFeatures::genes(get_genome_obj("TxDb_hg38"))
   
   # Transcriptional strand bias
   mut_mat_s <- MutationalPatterns::mut_matrix_stranded(
@@ -587,7 +587,7 @@ sig_plot_rainfall <- function(vcf_gr, ref_genome) {
     # Create a placeholder when insufficient data
     p_rainfall <- ggplot2::ggplot() +
       ggplot2::annotate("text", x = 0.5, y = 0.5,
-                       label = "Insufficient variants for rainfall plot\n(need ≥2 variants per chromosome)",
+                       label = "Insufficient variants for rainfall plot\n(need >=2 variants per chromosome)",
                        hjust = 0.5, vjust = 0.5, size = 4) +
       ggplot2::theme_void() +
       ggplot2::labs(title = paste("Rainfall Plot -", names(gr_snv_rainfall)[1]))
