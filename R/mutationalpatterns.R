@@ -498,13 +498,12 @@ sig_plot_strand_bias <- function(vcf_gr, ref_genome) {
   ## ---- Transcriptional ---- ##
   # Only support hg38 for strand bias analysis
   txdb_pkg <- "TxDb.Hsapiens.UCSC.hg38.knownGene"
-  if (!requireNamespace(txdb_pkg, quietly = TRUE)) {
+  if (!pkg_exists(txdb_pkg)) {
     stop(txdb_pkg, " package not available. ",
          "Install with: BiocManager::install('", txdb_pkg, "')")
   }
   
-  library(txdb_pkg, character.only = TRUE)
-  genes_list <- GenomicFeatures::genes(TxDb.Hsapiens.UCSC.hg38.knownGene)
+  genes_list <- GenomicFeatures::genes(get_genome_obj("TxDb_hg38"))
   
   # Transcriptional strand bias
   mut_mat_s <- MutationalPatterns::mut_matrix_stranded(
