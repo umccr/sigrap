@@ -4,7 +4,15 @@
 \alias{sig_workflow_run}
 \title{Run MutationalPatterns Workflow}
 \usage{
-sig_workflow_run(vcf, sample_nm, ref_genome = "hg38", outdir, rainfall = FALSE, strand_bias = FALSE)
+sig_workflow_run(
+  vcf,
+  sample_nm,
+  ref_genome = "hg38",
+  outdir,
+  rainfall = FALSE,
+  strand_bias = FALSE,
+  predefined_dbs_mbs = FALSE
+)
 }
 \arguments{
 \item{vcf}{VCF file with SNVs.}
@@ -18,6 +26,8 @@ sig_workflow_run(vcf, sample_nm, ref_genome = "hg38", outdir, rainfall = FALSE, 
 \item{rainfall}{Logical. Whether to generate rainfall plot. Default is FALSE.}
 
 \item{strand_bias}{Logical. Whether to generate strand bias analysis. Default is FALSE.}
+
+\item{predefined_dbs_mbs}{Logical. Set to TRUE when DBS/MBS variants are predefined in the VCF. Default is FALSE.}
 }
 \description{
 Runs a MutationalPatterns Workflow.
