@@ -23,7 +23,7 @@
 #'
 #' @export
 sig_contribution <- function(mut_mat, signatures) {
-  # Skip fitting when there are no mutations — fit_to_signatures is degenerate on zero input
+  # Skip fitting when there are no mutations -- fit_to_signatures is degenerate on zero input
   if (sum(mut_mat) == 0) {
     fit_res <- tibble::tribble(~sig, ~contr, "No Signatures found!", 0)
   } else {
@@ -41,7 +41,7 @@ sig_contribution <- function(mut_mat, signatures) {
   fit_res |>
     dplyr::mutate(
       contr = round(.data$contr, 0),
-      RelFreq = round(.data$contr / sum(.data$contr), 2),
+      RelFreq = ifelse(sum(.data$contr) == 0, 0, round(.data$contr / sum(.data$contr), 2)),
       Rank = as.integer(base::rank(-.data$contr))
     ) |>
     dplyr::select("Rank",
@@ -254,9 +254,9 @@ sig_count_dbs <- function(vcf_gr, predefined_dbs_mbs = FALSE) {
   cli::cli_h2(glue::glue("{date_log()} Counting DBS contexts"))
   gr_dbs <- MutationalPatterns::get_mut_type(vcf_list = vcf_gr, type = "dbs", predefined_dbs_mbs = predefined_dbs_mbs)
   # get_dbs_context / count_dbs_contexts crash with colnames<- error when there are
-  # zero DBS variants — return an all-zero matrix with the correct 78-context layout
+  # zero DBS variants -- return an all-zero matrix with the correct 78-context layout
   if (sum(lengths(gr_dbs)) == 0) {
-    cli::cli_warn("No DBS variants found — returning zero counts")
+    cli::cli_warn("No DBS variants found -- returning zero counts")
     dbs_contexts <- rownames(MutationalPatterns::get_known_signatures(muttype = "dbs"))
     return(matrix(0L, nrow = length(dbs_contexts), ncol = 1,
                   dimnames = list(dbs_contexts, names(gr_dbs))))
@@ -296,8 +296,13 @@ sig_count_mbs <- function(vcf_gr, predefined_dbs_mbs = FALSE) {
 #'
 #' @export
 sig_plot_mbs <- function(mbs_counts, same_y = TRUE) {
+  if (sum(mbs_counts) == 0) {
+    empty <- ggplot2::ggplot() +
+      ggplot2::theme_void() +
+      ggplot2::labs(title = "No MBS variants found")
+    return(list(p_mbs = empty))
+  }
   p_mbs <- MutationalPatterns::plot_mbs_contexts(counts = mbs_counts, same_y = same_y)
-  
   list(
     p_mbs = p_mbs
   )
@@ -424,8 +429,7 @@ sig_workflow_run <- function(vcf, sample_nm, ref_genome = "hg38", outdir, rainfa
 
   # signature contributions (2015)
   sigs_snv_2015 <-
-    # this should get the obj from the pkg namespace
-    get("cosmic_signatures_2015") |>
+    sigrap::cosmic_signatures_2015 |>
     {
       \(sigs) sig_contribution(mut_mat = snv_counts$snv_counts, signatures = sigs)
     }() |>

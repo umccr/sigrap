@@ -33,6 +33,7 @@ Imports:
     GenomicFeatures,
     GenomicRanges,
     ggplot2,
+    glue,
     IRanges,
     jsonlite,
     MutationalPatterns,
@@ -40,6 +41,7 @@ Imports:
     rlang,
     signature.tools.lib,
     StructuralVariantAnnotation,
+    tibble,
     tidyr,
     VariantAnnotation
 Suggests:
@@ -49,7 +51,6 @@ Suggests:
     BSgenome.Hsapiens.1000genomes.hs37d5,
     devtools,
     DT,
-    glue,
     kableExtra,
     knitr,
     patchwork,
@@ -57,7 +58,6 @@ Suggests:
     rmarkdown,
     scales,
     testthat (>= 3.0.0),
-    tibble,
     tidyselect,
     TxDb.Hsapiens.UCSC.hg38.knownGene
 Roxygen: list(markdown = TRUE,
