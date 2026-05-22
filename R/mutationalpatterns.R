@@ -429,7 +429,7 @@ sig_workflow_run <- function(vcf, sample_nm, ref_genome = "hg38", outdir, rainfa
 
   # signature contributions (2015)
   sigs_snv_2015 <-
-    sigrap::cosmic_signatures_2015 |>
+    cosmic_signatures_2015 |>
     {
       \(sigs) sig_contribution(mut_mat = snv_counts$snv_counts, signatures = sigs)
     }() |>
