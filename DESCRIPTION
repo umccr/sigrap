@@ -1,6 +1,6 @@
 Package: sigrap
 Title: Wrappers for somatic mutation signature analysis tools
-Version: 0.2.0
+Version: 0.3.0
 Description: Wraps functionality from somatic signature analysis tools.
 Authors@R: c(
     person(given = "Peter",
