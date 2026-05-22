@@ -347,6 +347,12 @@ sig_mbs_table <- function(mbs_counts) {
 #'
 #' @export
 sig_plot_dbs <- function(dbs_counts) {
+  if (sum(dbs_counts) == 0) {
+    empty <- ggplot2::ggplot() +
+      ggplot2::theme_void() +
+      ggplot2::labs(title = "No DBS variants found")
+    return(list(p_dbs_main = empty, p_dbs_cont = empty))
+  }
   p_dbs_main <- MutationalPatterns::plot_main_dbs_contexts(counts = dbs_counts)
   p_dbs_cont <- MutationalPatterns::plot_dbs_contexts(counts = dbs_counts, condensed = TRUE)
 
@@ -437,7 +443,6 @@ sig_workflow_run <- function(vcf, sample_nm, ref_genome = "hg38", outdir, rainfa
     sig_contribution_table(type = "SBS")
 
   #---- DBS ----#
-  # plots
   dbs_counts <- sig_count_dbs(vcf_gr = gr, predefined_dbs_mbs = predefined_dbs_mbs)
   p_dbs <- sig_plot_dbs(dbs_counts = dbs_counts)
 
