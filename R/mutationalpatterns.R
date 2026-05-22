@@ -23,21 +23,22 @@
 #'
 #' @export
 sig_contribution <- function(mut_mat, signatures) {
-  # Fit mutation matrix to cancer signatures
-  fit_res <-
-    MutationalPatterns::fit_to_signatures(mut_mat, signatures)$contribution |>
-    tibble::as_tibble(rownames = "sig") |>
-    dplyr::rename(contr = 2) |>
-    dplyr::filter(.data$contr > 0)
+  # Skip fitting when there are no mutations — fit_to_signatures is degenerate on zero input
+  if (sum(mut_mat) == 0) {
+    fit_res <- tibble::tribble(~sig, ~contr, "No Signatures found!", 0)
+  } else {
+    fit_res <-
+      MutationalPatterns::fit_to_signatures(mut_mat, signatures)$contribution |>
+      tibble::as_tibble(rownames = "sig") |>
+      dplyr::rename(contr = 2) |>
+      dplyr::filter(.data$contr > 0)
 
-  if (nrow(fit_res) == 0) {
-    fit_res <- tibble::tribble(
-      ~sig, ~contr,
-      "No Signatures found!", 0
-    )
+    if (nrow(fit_res) == 0) {
+      fit_res <- tibble::tribble(~sig, ~contr, "No Signatures found!", 0)
+    }
   }
 
-  fit_res_contr <- fit_res |>
+  fit_res |>
     dplyr::mutate(
       contr = round(.data$contr, 0),
       RelFreq = round(.data$contr / sum(.data$contr), 2),
@@ -48,8 +49,6 @@ sig_contribution <- function(mut_mat, signatures) {
       Contribution = "contr", "RelFreq"
     ) |>
     dplyr::arrange(.data$Rank)
-
-  fit_res_contr
 }
 
 #' Create COSMIC Signature Table
@@ -254,6 +253,14 @@ sig_plot_indel <- function(indel_counts) {
 sig_count_dbs <- function(vcf_gr, predefined_dbs_mbs = FALSE) {
   cli::cli_h2(glue::glue("{date_log()} Counting DBS contexts"))
   gr_dbs <- MutationalPatterns::get_mut_type(vcf_list = vcf_gr, type = "dbs", predefined_dbs_mbs = predefined_dbs_mbs)
+  # get_dbs_context / count_dbs_contexts crash with colnames<- error when there are
+  # zero DBS variants — return an all-zero matrix with the correct 78-context layout
+  if (sum(lengths(gr_dbs)) == 0) {
+    cli::cli_warn("No DBS variants found — returning zero counts")
+    dbs_contexts <- rownames(MutationalPatterns::get_known_signatures(muttype = "dbs"))
+    return(matrix(0L, nrow = length(dbs_contexts), ncol = 1,
+                  dimnames = list(dbs_contexts, names(gr_dbs))))
+  }
   gr_dbs <- MutationalPatterns::get_dbs_context(vcf_list = gr_dbs)
   dbs_counts <- MutationalPatterns::count_dbs_contexts(vcf_list = gr_dbs)
   dbs_counts
