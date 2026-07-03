@@ -1,4 +1,9 @@
-# sigrap dev
+# sigrap 0.3.0 (2026-05-22)
+
+- :star: Add MBS (Multi-Base Substitution) support: `sig_count_mbs`, `sig_plot_mbs`, `sig_mbs_table` ([pr14](https://github.com/umccr/sigrap/pull/14)).
+- :star: Add `predefined_dbs_mbs` parameter to handle pre-merged DBS/MBS variants in the VCF ([pr14](https://github.com/umccr/sigrap/pull/14)).
+- :bug: Fix crash when sample has zero DBS variants -- return placeholder plots and skip signature fitting ([pr14](https://github.com/umccr/sigrap/pull/14)).
+- :bug: Fix `RelFreq` producing `NaN` in JSON output for zero-variant samples ([pr14](https://github.com/umccr/sigrap/pull/14)).
 
 # sigrap 0.1.0 (2022-06-10)
 

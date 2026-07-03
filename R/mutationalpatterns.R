@@ -23,24 +23,25 @@
 #'
 #' @export
 sig_contribution <- function(mut_mat, signatures) {
-  # Fit mutation matrix to cancer signatures
-  fit_res <-
-    MutationalPatterns::fit_to_signatures(mut_mat, signatures)$contribution |>
-    tibble::as_tibble(rownames = "sig") |>
-    dplyr::rename(contr = 2) |>
-    dplyr::filter(.data$contr > 0)
+  # Skip fitting when there are no mutations -- fit_to_signatures is degenerate on zero input
+  if (sum(mut_mat) == 0) {
+    fit_res <- tibble::tribble(~sig, ~contr, "No Signatures found!", 0)
+  } else {
+    fit_res <-
+      MutationalPatterns::fit_to_signatures(mut_mat, signatures)$contribution |>
+      tibble::as_tibble(rownames = "sig") |>
+      dplyr::rename(contr = 2) |>
+      dplyr::filter(.data$contr > 0)
 
-  if (nrow(fit_res) == 0) {
-    fit_res <- tibble::tribble(
-      ~sig, ~contr,
-      "No Signatures found!", 0
-    )
+    if (nrow(fit_res) == 0) {
+      fit_res <- tibble::tribble(~sig, ~contr, "No Signatures found!", 0)
+    }
   }
 
-  fit_res_contr <- fit_res |>
+  fit_res |>
     dplyr::mutate(
       contr = round(.data$contr, 0),
-      RelFreq = round(.data$contr / sum(.data$contr), 2),
+      RelFreq = ifelse(sum(.data$contr) == 0, 0, round(.data$contr / sum(.data$contr), 2)),
       Rank = as.integer(base::rank(-.data$contr))
     ) |>
     dplyr::select("Rank",
@@ -48,8 +49,6 @@ sig_contribution <- function(mut_mat, signatures) {
       Contribution = "contr", "RelFreq"
     ) |>
     dplyr::arrange(.data$Rank)
-
-  fit_res_contr
 }
 
 #' Create COSMIC Signature Table
@@ -128,6 +127,7 @@ sig_contribution_table <- function(contr, type, outdir = NULL) {
 #'
 #' @export
 sig_count_snv <- function(vcf_gr, ref_genome) {
+  cli::cli_h2(glue::glue("{date_log()} Counting SNV contexts"))
   gr_snv <- MutationalPatterns::get_mut_type(vcf_list = vcf_gr, type = "snv")
   snv_counts <- MutationalPatterns::mut_matrix(vcf_list = gr_snv, ref_genome = ref_genome)
   list(
@@ -177,7 +177,7 @@ sig_plot_snv <- function(gr_snv, snv_counts, ref_genome, rainfall = FALSE) {
     ggplot2::theme(legend.position = "none")
   
   if (rainfall) {
-    p_rainfall <- sigrap::sig_plot_rainfall(vcf_gr = gr_snv, ref_genome = ref_genome)
+    p_rainfall <- sig_plot_rainfall(vcf_gr = gr_snv, ref_genome = ref_genome)
   }
 
   result <- list(
@@ -205,6 +205,7 @@ sig_plot_snv <- function(gr_snv, snv_counts, ref_genome, rainfall = FALSE) {
 #'
 #' @export
 sig_count_indel <- function(vcf_gr, ref_genome) {
+  cli::cli_h2(glue::glue("{date_log()} Counting INDEL contexts"))
   gr_indel <- MutationalPatterns::get_mut_type(vcf_list = vcf_gr, type = "indel")
   gr_indel <- MutationalPatterns::get_indel_context(vcf_list = gr_indel, ref_genome = ref_genome)
   indel_counts <- MutationalPatterns::count_indel_contexts(vcf_list = gr_indel)
@@ -244,16 +245,100 @@ sig_plot_indel <- function(indel_counts) {
 #' Counts DBS Contexts.
 #'
 #' @param vcf_gr GRanges containing all mutation types from a single sample.
+#' @param predefined_dbs_mbs Logical. Set to TRUE when DBS/MBS variants are predefined in the VCF. Default is FALSE.
 #'
 #' @return A tibble containing the number of DBS per COSMIC context per gr.
 #'
 #' @export
-sig_count_dbs <- function(vcf_gr) {
-  gr_dbs <- MutationalPatterns::get_mut_type(vcf_list = vcf_gr, type = "dbs")
+sig_count_dbs <- function(vcf_gr, predefined_dbs_mbs = FALSE) {
+  cli::cli_h2(glue::glue("{date_log()} Counting DBS contexts"))
+  gr_dbs <- MutationalPatterns::get_mut_type(vcf_list = vcf_gr, type = "dbs", predefined_dbs_mbs = predefined_dbs_mbs)
+  # get_dbs_context / count_dbs_contexts crash with colnames<- error when there are
+  # zero DBS variants -- return an all-zero matrix with the correct 78-context layout
+  if (sum(lengths(gr_dbs)) == 0) {
+    cli::cli_warn("No DBS variants found -- returning zero counts")
+    dbs_contexts <- rownames(MutationalPatterns::get_known_signatures(muttype = "dbs"))
+    return(matrix(0L, nrow = length(dbs_contexts), ncol = 1,
+                  dimnames = list(dbs_contexts, names(gr_dbs))))
+  }
   gr_dbs <- MutationalPatterns::get_dbs_context(vcf_list = gr_dbs)
   dbs_counts <- MutationalPatterns::count_dbs_contexts(vcf_list = gr_dbs)
   dbs_counts
 }
+
+
+#' Count mbs Contexts
+#'
+#' Counts mbs (Multi-Base Substitution) Contexts.
+#'
+#' @param vcf_gr GRanges containing all mutation types from a single sample.
+#' @param predefined_dbs_mbs Logical. Set to TRUE when DBS/MBS variants are predefined in the VCF. Default is FALSE.
+#'
+#' @return A matrix or named vector of MBS counts by length category (3bp, 4bp, 5+bp).
+#'
+#' @export
+sig_count_mbs <- function(vcf_gr, predefined_dbs_mbs = FALSE) {
+  cli::cli_h2(glue::glue("{date_log()} Counting MBS contexts"))
+  gr_mbs <- MutationalPatterns::get_mut_type(vcf_list = vcf_gr, type = "mbs", predefined_dbs_mbs = predefined_dbs_mbs)
+  mbs_counts <- MutationalPatterns::count_mbs_contexts(gr_mbs)  # counts by length (3, 4, 5+)
+  mbs_counts
+}
+
+
+#' Plot MBS Mutation Characteristics
+#'
+#' Plots MBS (Multi-Base Substitution) mutation characteristics.
+#'
+#' @param mbs_counts MBS context counts (matrix with counts by length).
+#' @param same_y Logical. If TRUE, all facets have the same y-axis scale. Default is TRUE.
+#'
+#' @return A list with p_mbs (ggplot2 object) showing MBS contexts.
+#'
+#' @export
+sig_plot_mbs <- function(mbs_counts, same_y = TRUE) {
+  if (sum(mbs_counts) == 0) {
+    empty <- ggplot2::ggplot() +
+      ggplot2::theme_void() +
+      ggplot2::labs(title = "No MBS variants found")
+    return(list(p_mbs = empty))
+  }
+  p_mbs <- MutationalPatterns::plot_mbs_contexts(counts = mbs_counts, same_y = same_y)
+  list(
+    p_mbs = p_mbs
+  )
+}
+
+
+#' Create MBS Table for JSON Output
+#'
+#' Creates a table of MBS counts by variant length (3bp, 4bp, 5+bp) for JSON export.
+#' Unlike other signature types, MBS counts are simple counts categorized by length 
+#' rather than fitted signature patterns.
+#'
+#' @param mbs_counts MBS context counts (matrix with counts by length).
+#'
+#' @return A tibble with Type (MBS length category) and Count columns.
+#'
+#' @export
+sig_mbs_table <- function(mbs_counts) {
+  # Sum across samples if multiple columns (though typically should be single sample)
+  if (is.matrix(mbs_counts)) {
+    total_counts <- rowSums(mbs_counts)
+  } else {
+    total_counts <- mbs_counts
+  }
+  
+  # Create simple tibble with counts by MBS type
+  mbs_table <- tibble::tibble(
+    Type = names(total_counts),
+    Count = as.integer(total_counts)
+  ) |>
+    dplyr::filter(.data$Count > 0) |>
+    dplyr::arrange(dplyr::desc(.data$Count))
+  
+  mbs_table
+}
+
 
 #' Plot DBS Mutation Characteristics
 #'
@@ -267,6 +352,12 @@ sig_count_dbs <- function(vcf_gr) {
 #'
 #' @export
 sig_plot_dbs <- function(dbs_counts) {
+  if (sum(dbs_counts) == 0) {
+    empty <- ggplot2::ggplot() +
+      ggplot2::theme_void() +
+      ggplot2::labs(title = "No DBS variants found")
+    return(list(p_dbs_main = empty, p_dbs_cont = empty))
+  }
   p_dbs_main <- MutationalPatterns::plot_main_dbs_contexts(counts = dbs_counts)
   p_dbs_cont <- MutationalPatterns::plot_dbs_contexts(counts = dbs_counts, condensed = TRUE)
 
@@ -288,9 +379,10 @@ sig_plot_dbs <- function(dbs_counts) {
 #' @param outdir Directory path to output all the results to.
 #' @param rainfall Logical. Whether to generate rainfall plot. Default is FALSE.
 #' @param strand_bias Logical. Whether to generate strand bias analysis. Default is FALSE.
+#' @param predefined_dbs_mbs Logical. Set to TRUE when DBS/MBS variants are predefined in the VCF. Default is FALSE.
 #'
 #' @export
-sig_workflow_run <- function(vcf, sample_nm, ref_genome = "hg38", outdir, rainfall = FALSE, strand_bias = FALSE) {
+sig_workflow_run <- function(vcf, sample_nm, ref_genome = "hg38", outdir, rainfall = FALSE, strand_bias = FALSE, predefined_dbs_mbs = FALSE) {
   fs::dir_create(outdir)
   outdir <- normalizePath(outdir)
   ref_genome <- get_genome_obj(ref_genome)
@@ -303,7 +395,7 @@ sig_workflow_run <- function(vcf, sample_nm, ref_genome = "hg38", outdir, rainfa
       nm <- names(pl)[i]
       fn <- file.path(outdir, paste0(nm, ".png"))
       plot_obj <- pl[[i]]
-      
+
       # Use larger dimensions for rainfall plots
       if (nm == "p_rainfall") {
         ggplot2::ggsave(filename = fn, plot = plot_obj, width = 25, height = 8, units = "in", dpi = 300)
@@ -325,23 +417,23 @@ sig_workflow_run <- function(vcf, sample_nm, ref_genome = "hg38", outdir, rainfa
 
   #---- SBS ----#
   # plots
-  snv_counts <- sigrap::sig_count_snv(vcf_gr = gr, ref_genome = ref_genome)
-  p_snv <- sigrap::sig_plot_snv(
+  snv_counts <- sig_count_snv(vcf_gr = gr, ref_genome = ref_genome)
+  p_snv <- sig_plot_snv(
     gr_snv = snv_counts$gr_snv, snv_counts = snv_counts$snv_counts,
     ref_genome = ref_genome, rainfall = rainfall
   )
 
   if (strand_bias) {
-    p_strand <- sigrap::sig_plot_strand_bias(vcf_gr = gr, ref_genome = ref_genome)
+    p_strand <- sig_plot_strand_bias(vcf_gr = gr, ref_genome = ref_genome)
   }
 
   # signature contributions (2015)
   sigs_snv_2015 <-
-    sigrap::cosmic_signatures_2015 |>
+    cosmic_signatures_2015 |>
     {
-      \(sigs) sigrap::sig_contribution(mut_mat = snv_counts$snv_counts, signatures = sigs)
+      \(sigs) sig_contribution(mut_mat = snv_counts$snv_counts, signatures = sigs)
     }() |>
-    sigrap::sig_contribution_table(type = "Sig")
+    sig_contribution_table(type = "Sig")
 
   # signature contributions (2020)
   sigs_snv_2020 <-
@@ -350,35 +442,42 @@ sig_workflow_run <- function(vcf, sample_nm, ref_genome = "hg38", outdir, rainfa
       incl_poss_artifacts = TRUE
     ) |>
     {
-      \(sigs) sigrap::sig_contribution(mut_mat = snv_counts$snv_counts, signatures = sigs)
+      \(sigs) sig_contribution(mut_mat = snv_counts$snv_counts, signatures = sigs)
     }() |>
-    sigrap::sig_contribution_table(type = "SBS")
+    sig_contribution_table(type = "SBS")
 
   #---- DBS ----#
-  # plots
-  dbs_counts <- sigrap::sig_count_dbs(vcf_gr = gr)
-  p_dbs <- sigrap::sig_plot_dbs(dbs_counts = dbs_counts)
+  dbs_counts <- sig_count_dbs(vcf_gr = gr, predefined_dbs_mbs = predefined_dbs_mbs)
+  p_dbs <- sig_plot_dbs(dbs_counts = dbs_counts)
 
   # signature contributions
   sigs_dbs <-
     MutationalPatterns::get_known_signatures(muttype = "dbs") |>
     {
-      \(sigs) sigrap::sig_contribution(mut_mat = dbs_counts, signatures = sigs)
+      \(sigs) sig_contribution(mut_mat = dbs_counts, signatures = sigs)
     }() |>
-    sigrap::sig_contribution_table(type = "DBS")
+    sig_contribution_table(type = "DBS")
+
+  #---- MBS ----#
+  # counts and plots
+  mbs_counts <- sig_count_mbs(vcf_gr = gr, predefined_dbs_mbs = predefined_dbs_mbs)
+  p_mbs <- sig_plot_mbs(mbs_counts = mbs_counts, same_y = TRUE)
+  
+  # Create MBS table for JSON export
+  mbs_table <- sig_mbs_table(mbs_counts = mbs_counts)
 
   #---- Indels ----#
   # plots
-  indel_counts <- sigrap::sig_count_indel(vcf_gr = gr, ref_genome = ref_genome)
-  p_indel <- sigrap::sig_plot_indel(indel_counts = indel_counts)
+  indel_counts <- sig_count_indel(vcf_gr = gr, ref_genome = ref_genome)
+  p_indel <- sig_plot_indel(indel_counts = indel_counts)
 
   # signature contributions
   sigs_indel <-
     MutationalPatterns::get_known_signatures(muttype = "indel") |>
     {
-      \(sigs) sigrap::sig_contribution(mut_mat = indel_counts, signatures = sigs)
+      \(sigs) sig_contribution(mut_mat = indel_counts, signatures = sigs)
     }() |>
-    sigrap::sig_contribution_table(type = "ID")
+    sig_contribution_table(type = "ID")
 
   cli::cli_h2(glue::glue("{date_log()} Saving MutationalPatterns results to\n'{outdir}'"))
   save_plot_list(p_snv, file.path(outdir, "plot/snv"))
@@ -386,10 +485,12 @@ sig_workflow_run <- function(vcf, sample_nm, ref_genome = "hg38", outdir, rainfa
     save_plot_list(p_strand, file.path(outdir, "plot/strand"))
   }
   save_plot_list(p_dbs, file.path(outdir, "plot/dbs"))
+  save_plot_list(p_mbs, file.path(outdir, "plot/mbs"))
   save_plot_list(p_indel, file.path(outdir, "plot/indel"))
   write_jsongz(x = sigs_snv_2015, path = file.path(outdir, "sigs/snv2015.json.gz"))
   write_jsongz(x = sigs_snv_2020, path = file.path(outdir, "sigs/snv2020.json.gz"))
   write_jsongz(x = sigs_dbs, path = file.path(outdir, "sigs/dbs.json.gz"))
+  write_jsongz(x = mbs_table, path = file.path(outdir, "sigs/mbs.json.gz"))
   write_jsongz(x = sigs_indel, path = file.path(outdir, "sigs/indel.json.gz"))
   cli::cli_h2(glue::glue("{date_log()} End of MutationalPatterns workflow"))
 }
@@ -414,13 +515,12 @@ sig_plot_strand_bias <- function(vcf_gr, ref_genome) {
   ## ---- Transcriptional ---- ##
   # Only support hg38 for strand bias analysis
   txdb_pkg <- "TxDb.Hsapiens.UCSC.hg38.knownGene"
-  if (!requireNamespace(txdb_pkg, quietly = TRUE)) {
+  if (!pkg_exists(txdb_pkg)) {
     stop(txdb_pkg, " package not available. ",
          "Install with: BiocManager::install('", txdb_pkg, "')")
   }
   
-  library(txdb_pkg, character.only = TRUE)
-  genes_list <- GenomicFeatures::genes(TxDb.Hsapiens.UCSC.hg38.knownGene)
+  genes_list <- GenomicFeatures::genes(get_genome_obj("TxDb_hg38"))
   
   # Transcriptional strand bias
   mut_mat_s <- MutationalPatterns::mut_matrix_stranded(
@@ -502,12 +602,11 @@ sig_plot_rainfall <- function(vcf_gr, ref_genome) {
   } else {
     # Create a placeholder when insufficient data
     p_rainfall <- ggplot2::ggplot() +
-      ggplot2::annotate("text", x = 0.5, y = 0.5, 
-                       label = "Insufficient variants for rainfall plot\n(need ≥2 variants per chromosome)",
+      ggplot2::annotate("text", x = 0.5, y = 0.5,
+                       label = "Insufficient variants for rainfall plot\n(need >=2 variants per chromosome)",
                        hjust = 0.5, vjust = 0.5, size = 4) +
       ggplot2::theme_void() +
       ggplot2::labs(title = paste("Rainfall Plot -", names(gr_snv_rainfall)[1]))
   }
-  
-  return(p_rainfall)
+  p_rainfall
 }

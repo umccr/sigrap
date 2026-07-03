@@ -122,7 +122,8 @@ get_genome_obj <- function(genome = "hg38") {
   bsgenome <- c(
     hg19 = "BSgenome.Hsapiens.UCSC.hg19",
     hg38 = "BSgenome.Hsapiens.UCSC.hg38",
-    GRCh37 = "BSgenome.Hsapiens.1000genomes.hs37d5"
+    GRCh37 = "BSgenome.Hsapiens.1000genomes.hs37d5",
+    TxDb_hg38 = "TxDb.Hsapiens.UCSC.hg38.knownGene"
   )
   pkg <- bsgenome[genome]
   assertthat::assert_that(

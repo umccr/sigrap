@@ -126,7 +126,7 @@ export PATH="${sigrap_cli}:${PATH}"
 
     sigrap.R mutpat --help
     usage: sigrap mutpat [-h] --sample SAMPLE --snv SNV --outdir OUTDIR
-                         [--rainfall] [--strand-bias]
+                         [--rainfall] [--strand-bias] [--predefined-dbs-mbs]
 
     options:
       -h, --help       show this help message and exit
@@ -135,3 +135,5 @@ export PATH="${sigrap_cli}:${PATH}"
       --outdir OUTDIR  Output directory to write results to.
       --rainfall       Include rainfall plot.
       --strand-bias    Include strand bias analysis.
+      --predefined-dbs-mbs
+                       Assume DBS/MBS variants are pre-merged in the VCF.
