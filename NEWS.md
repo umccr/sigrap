@@ -4,6 +4,7 @@
 - :star: Add `predefined_dbs_mbs` parameter to handle pre-merged DBS/MBS variants in the VCF ([pr14](https://github.com/umccr/sigrap/pull/14)).
 - :bug: Fix crash when sample has zero DBS variants -- return placeholder plots and skip signature fitting ([pr14](https://github.com/umccr/sigrap/pull/14)).
 - :bug: Fix `RelFreq` producing `NaN` in JSON output for zero-variant samples ([pr14](https://github.com/umccr/sigrap/pull/14)).
+- :bug: Fix `cosmic_signatures_2015` referenced via `sigrap::` inside `sig_workflow_run` — use bare name instead; `sigrap::` from within the package requires the object to be exported ([87459d2](https://github.com/umccr/sigrap/commit/87459d2)).
 
 # sigrap 0.1.0 (2022-06-10)
 

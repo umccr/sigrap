@@ -1,3 +1,14 @@
+test_that("cosmic_signatures_2015 is accessible by bare name inside sigrap namespace", {
+  # fix 87459d2: sigrap::cosmic_signatures_2015 -> bare cosmic_signatures_2015 inside
+  # sig_workflow_run. sigrap:: from inside the package requires export; bare name works
+  # for all package-internal objects. Confirmed non-breaking: prod runs with dev-8 image
+  # succeeded, proving the object was already accessible.
+  expect_true(
+    exists("cosmic_signatures_2015", envir = asNamespace("sigrap"), inherits = FALSE),
+    info = "cosmic_signatures_2015 must exist in the sigrap namespace for sig_workflow_run"
+  )
+})
+
 test_that("sig_contribution returns zero RelFreq (not NaN) when mut_mat is all zeros", {
   zero_mat <- matrix(0L, nrow = 96, ncol = 1, dimnames = list(paste0("ctx", seq_len(96)), "sample"))
   # signatures arg unused when sum(mut_mat) == 0
